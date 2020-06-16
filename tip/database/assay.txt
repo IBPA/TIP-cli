@@ -1,0 +1,12 @@
+protein
+gene
+species
+ahr_lb
+ahr_db
+ahr_ge
+conc_substrate
+conc_tested
+inhibition
+ec50
+pmid
+comment
