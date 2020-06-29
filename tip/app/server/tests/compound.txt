@@ -1,0 +1,8 @@
+common_names
+iupac_name
+cas
+cid
+inchikey
+smiles
+mw
+comment
