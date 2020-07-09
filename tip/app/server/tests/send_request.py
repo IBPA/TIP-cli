@@ -1,13 +1,18 @@
-import json
+# import json
 import requests
 
-if __name__ == '__main__':
+URL = 'http://localhost:3000/api/gen'
 
-    url = 'http://localhost:3000/api/upload'
-    headers = {
-        'Content-Type'  : 'application/json',
-        'Accept'        : 'application/json'}
-    data = json.load(open('data_dummy.csv.json', 'r'))
 
-    r = requests.post(url = url, json = data)
+def test_create():
+    r = requests.post(url=URL, files={'file': open('data_dummy.csv', 'rb')})
     print(r.text)
+
+
+def test_gen_tmp():
+    r = requests.get(url=URL)
+    print(r.text)
+
+
+if __name__ == '__main__':
+    test_gen_tmp()

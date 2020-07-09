@@ -1,9 +1,7 @@
 protein
 gene
+ahr_type
 species
-ahr_lb
-ahr_db
-ahr_ge
 conc_substrate
 conc_tested
 inhibition
