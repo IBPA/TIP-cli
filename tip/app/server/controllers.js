@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 
 
-// generate template
+// return schema
 app.get('/api/schema', (req, res) => {
     const compoundHeader = fs.readFileSync('models/compound.txt', 'utf8');
     const assayHeader = fs.readFileSync('models/assay.txt', 'utf8');
