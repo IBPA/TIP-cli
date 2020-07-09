@@ -1,3 +1,7 @@
+// TODO
+//  add comments, strying
+
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -5,10 +9,22 @@ const port = process.env.PORT || 3000;
 const app = express();
 app.use(bodyParser.json());
 
+
+// generate template
+app.get('/api/schema', (req, res) => {
+    const compoundHeader = fs.readFileSync('models/compound.txt', 'utf8');
+    const assayHeader = fs.readFileSync('models/assay.txt', 'utf8');
+    res.send({
+        'compound' : compoundHeader,
+        'assay' : assayHeader
+    });
+});
+
 // upload
 app.post('/api/upload', (req, res) => {
     res.send("Request received!");
-    insertDB(req.body);
+    // insertDB(req.body);
+    console.log(req.body)
 });
 
 // query
