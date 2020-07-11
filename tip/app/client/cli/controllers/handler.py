@@ -6,15 +6,13 @@ This module defines functions for communicating with back end.
 Author:
     Fangzhou Li: https://github.com/fangzhouli
 
-Example:
-    TODO
-
 TODO:
     - Read method.
 
 """
 
 from datetime import datetime
+import logging
 import requests
 
 from models import convert_csv_to_json
@@ -29,6 +27,7 @@ def create(user, pw, fobj):
         fobj (str or file object): The CSV file containing data.
 
     """
+    logging.info('Requesting to create data...')
     data_json = convert_csv_to_json(fobj)
     data_json['uploader'] = user
     data_json['auth_key'] = pw
