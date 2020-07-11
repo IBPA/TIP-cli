@@ -19,8 +19,9 @@ TODO:
 
 import numpy as np
 import pandas as pd
+import logging
 
-from utils import get_headers
+from controllers import get_headers
 
 
 HEADER_COMPOUND, HEADER_ASSAY = get_headers()
@@ -56,6 +57,7 @@ def convert_csv_to_json(fobj):
         data_converted (dict): A converted JSON format data.
 
     """
+    logging.info('Converting uploaded CSV file into JSON data format...')
     # Split the dataframe by each compound.
     df = pd.read_csv(fobj, dtype=str)
     idx_split = df[~df[HEADER_COMPOUND].isnull().all(axis=1)

@@ -1,3 +1,3 @@
-from .get_headers import get_headers
+from .set_logging import set_logging
 
-__all__ = ['get_headers']
+__all__ = ['set_logging']
