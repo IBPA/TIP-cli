@@ -76,7 +76,6 @@ def parse_args(args):
     return args
 
 
-if __name__ == '__main__':
-
+def main():
     set_logging(__file__ + '.log')
     parse_args(sys.argv[1:])

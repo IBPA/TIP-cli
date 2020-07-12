@@ -1,16 +1,14 @@
-from models import Converter
+
+
+from models import convert_csv_to_json
 
 
 def test_converter():
     """
     """
 
-    # hc = ['cid', 'cas', 'common_names', 'iupac_name', 'inchikey', 'smiles',
-    #       'mw (g/mol)', 'comment']
-    # ha = ['protein', 'gene', 'ahr_type', 'species', 'conc_substrate (μM)',
-    #       'conc_tested (μM)', 'inhibition (%)', 'ec50 (nM)', 'pmid', 'comment']
-    cvtr = Converter()
-    print(cvtr.convert('data_dummy.csv'))
+    data = convert_csv_to_json('data_dummy.csv')
+    print(data)
 
 
 if __name__ == '__main__':
