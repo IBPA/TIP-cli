@@ -2,6 +2,7 @@
 //  add comments, strying
 
 const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -12,8 +13,10 @@ app.use(bodyParser.json());
 
 // return schema
 app.get('/api/schema', (req, res) => {
-    const compoundHeader = fs.readFileSync('models/compound.txt', 'utf8');
-    const assayHeader = fs.readFileSync('models/assay.txt', 'utf8');
+    const pathCompound = path.resolve(__dirname, "models/compound.txt");
+    const pathAssay = path.resolve(__dirname, "models/assay.txt");
+    const compoundHeader = fs.readFileSync(pathCompound, 'utf8');
+    const assayHeader = fs.readFileSync(pathAssay, 'utf8');
     res.send({
         'compound' : compoundHeader,
         'assay' : assayHeader
@@ -24,7 +27,7 @@ app.get('/api/schema', (req, res) => {
 app.post('/api/upload', (req, res) => {
     res.send("Request received!");
     // insertDB(req.body);
-    console.log(req.body)
+    console.log(req.body);
 });
 
 // query
