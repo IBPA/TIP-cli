@@ -12,4 +12,4 @@ setup(
         'pandas',
         'requests'
     ],
-    python_requires='>=3.8.1')
+    python_requires='>=3.6.1')
