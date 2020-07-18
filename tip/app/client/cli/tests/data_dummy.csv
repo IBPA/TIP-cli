@@ -1,0 +1,6 @@
+cid,cas,common_names,iupac_name,inchikey,smiles,mw (g/mol),comment,protein,gene,ahr_type,species,conc_substrate (μM),conc_tested (μM),inhibition (%),ec50 (nM),pmid,comment
+962,7732-18-5,Water;Dihydrogen oxide,Oxidine,XLYOFNOQVPJJNP-UHFFFAOYSA-N,O,18.02,You can drink it.,mEHh,EPHX1,,Homo sapiens,5,1,23.3,>1000,12345678,Method: CMNPC
+,,,,,,,,sEH,EPHX2,,Homo sapiens,25,10,1,>1000,12345679;12345680,Method: MNCG
+8530,130-15-4,Para-naphthoquinone,"Naphthalene-1,4-dione",FRASJONUBLZVQX-UHFFFAOYSA-N,C1=CC=C2C(=O)C=CC(=O)C2=C1,158.15,,,,LB,,,,,,11111111,
+,,,,,,,,,,DB,,,,,,12345681,
+,,,,,,,,,,GE,,,,,,12345690,
