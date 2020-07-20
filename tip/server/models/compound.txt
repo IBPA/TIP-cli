@@ -1,0 +1,1 @@
+cid,cas,common_names,iupac_name,inchikey,smiles,mw (g/mol),comment
