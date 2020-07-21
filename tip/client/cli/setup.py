@@ -8,8 +8,8 @@ setup(
         'console_scripts': ['tip-cli=views.main:main']
     },
     install_requires=[
-        'numpy',
-        'pandas',
-        'requests'
+        'numpy>=1.19.0',
+        'pandas>=1.0.5',
+        'requests>=2.24.0'
     ],
     python_requires='>=3.6.1')

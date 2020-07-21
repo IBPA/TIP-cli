@@ -7,7 +7,6 @@ Author:
     Fangzhou Li: https://github.com/fangzhouli
 
 TODO:
-    - Example
     - Read
     - help
     - comments
@@ -18,7 +17,6 @@ import csv
 import sys
 import logging
 import argparse
-
 from utils import set_logging
 from controllers import handler, get_headers
 
