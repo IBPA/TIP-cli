@@ -20,7 +20,6 @@ TODO:
 import numpy as np
 import pandas as pd
 import logging
-
 from controllers import get_headers
 
 

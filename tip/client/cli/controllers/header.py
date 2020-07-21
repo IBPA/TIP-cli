@@ -24,7 +24,6 @@ def get_headers():
     """
     logging.info('Requesting to get headers...')
     req = requests.get(url='http://localhost:3000/database/header')
-    print(req.text)
     header_json = json.loads(req.text)
     header_compound = header_json['compound'].split(',')
     header_assay = header_json['assay'].split(',')
