@@ -1,3 +1,0 @@
-common_names,iupac_name,cas,cid,inchikey,smiles,mw,comment,protein1,gene1,species1,ahr_lb1,ahr_db1,ahr_ge1,conc_substrate1,conc_tested1,inhibition1,ec501,pmid1,comment1,protein2,gene2,species2,ahr_lb2,ahr_db2,ahr_ge2,conc_substrate2,conc_tested2,inhibition2,ec502,pmid2,comment2
-Atrazine,"6-chloro-4-N-ethyl-2-N-propan-2-yl-1,3,5-triazine-2,4-diamine",1912-24-9,2256,MXWJVTOOROXGIU-UHFFFAOYSA-N,CCNC1=NC(=NC(=N1)Cl)NC(C)C,215.68,Usage: herbicide,sEH,EPHX2,human,,,,5,1,23.3,>1000,,Method: CMNPC,mEHh,EPXH1,human,,,,25,10,1,>1000,,Method: MNCG
-"1,2-Phenylenediamine","Benzene-1,2-diamine",95-54-5,,,,108.14,,,,,,,Yes,,,,,,,,,,,,,,,,,,

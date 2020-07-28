@@ -1,0 +1,1 @@
+protein,gene,ahr_type,species,conc_substrate,conc_tested,inhibition,ec50,pmid,comment

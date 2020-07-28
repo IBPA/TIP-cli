@@ -11,10 +11,8 @@ TODO:
 
 """
 
-from datetime import datetime
 import logging
 import requests
-
 from models import convert_csv_to_json
 
 
@@ -30,11 +28,11 @@ def create(user, pw, fobj):
     logging.info('Requesting to create data...')
     data_json = convert_csv_to_json(fobj)
     data_json['uploader'] = user
-    data_json['auth_key'] = pw
-    data_json['upload_date'] = str(datetime.now())[:19]
+    res = requests.post(url='http://localhost:3000/compound',
+                        json=data_json)
 
-    requests.post(url='http://localhost:3000/api/upload',
-                  json=data_json)
+    if res.status_code == 400:
+        logging.error(res.text)
 
 
 def read():

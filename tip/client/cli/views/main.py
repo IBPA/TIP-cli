@@ -18,7 +18,6 @@ import csv
 import sys
 import logging
 import argparse
-
 from utils import set_logging
 from controllers import handler, get_headers
 
@@ -46,17 +45,21 @@ def parse_args(args):
                         help="The input file name or path.")
 
     parser.add_argument('-outfile', nargs='?', type=argparse.FileType('w'),
-                        default=open('output.csv', 'w'), help="The output "
+                        help="The output "
                         "file name or path.")
 
     args = parser.parse_args(args)
 
     if args.req_type == 'gen-tmp':
+        if not args.outfile:
+            outfile_name = 'output.csv'
+        else:
+            outfile_name = args.outfile.name
         logging.info(
-            'Generating data template file {}'.format(args.outfile.name))
+            'Generating data template file {}'.format(outfile_name))
         hc, ha = get_headers()
-        csv.writer(args.outfile).writerow(hc + ha)
-        args.outfile.close()
+        with open(outfile_name, 'w') as f:
+            csv.writer(f).writerow(hc + ha)
 
     if args.req_type == 'create':
         if not args.user:
