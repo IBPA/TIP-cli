@@ -23,7 +23,7 @@ def get_headers():
 
     """
     logging.info('Requesting to get headers...')
-    req = requests.get(url='http://128.120.143.184:8001/database/header')
+    req = requests.get(url='http://192.168.218.128:8001/database/header')
     header_json = json.loads(req.text)
     header_compound = header_json['compound'].split(',')
     header_assay = header_json['assay'].split(',')

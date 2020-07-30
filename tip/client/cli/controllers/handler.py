@@ -30,7 +30,7 @@ def create(user, pw, fobj):
     data_json['user'] = user
     data_json['pw'] = pw
     # 192.168.218.128
-    res = requests.post(url='http://128.120.143.184:8001/compound',
+    res = requests.post(url='http://192.168.218.128:8001/compound',
                         json=data_json)
     if res.status_code == 400:
         logging.error(res.text)
@@ -42,7 +42,7 @@ def read(keywords):
     logging.info('Requesting to read data...')
     keywords_str = '+'.join(keywords)
     res = requests.get(
-        url='http://128.120.143.184:8001/compound/' + keywords_str)
+        url='http://192.168.218.128:8001/compound/' + keywords_str)
     if res.status_code == 400:
         logging.error(res.text)
 
