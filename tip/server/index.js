@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const database = require('./routers/database');
 const compounds = require('./routers/compounds');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8001;
 const app = express();
 const mongooseOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
