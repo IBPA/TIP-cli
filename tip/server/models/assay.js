@@ -50,7 +50,7 @@ const joiSchema = {
   conc_substrate: Joi.string().regex(float),
   conc_tested: Joi.string().regex(float),
   inhibition: Joi.string().regex(float),
-  ec50: Joi.string().regex(float),
+  ec50: Joi.string(),
   pmid: Joi.string(),  // TODO
   comment: Joi.string().max(1000)
 };
