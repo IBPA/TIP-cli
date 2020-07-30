@@ -27,18 +27,24 @@ def create(user, pw, fobj):
     """
     logging.info('Requesting to create data...')
     data_json = convert_csv_to_json(fobj)
-    data_json['uploader'] = user
+    data_json['user'] = user
+    data_json['pw'] = pw
     res = requests.post(url='http://localhost:3000/compound',
                         json=data_json)
-
     if res.status_code == 400:
         logging.error(res.text)
 
 
-def read():
+def read(keywords):
     """
     """
-    pass
+    logging.info('Requesting to read data...')
+    keywords_str = '+'.join(keywords)
+    res = requests.get(url='http://localhost:3000/compound/' + keywords_str)
+    if res.status_code == 400:
+        logging.error(res.text)
+
+    print(res.text)
 
 
 def update():

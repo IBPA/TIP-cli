@@ -7,7 +7,7 @@ def create_dummy_data():
     data_filename = 'data_dummy.csv'
     data_path = path.abspath(path.dirname(__file__) + data_filename)
 
-    user = 'lfz'
+    user = 'fzli'
     pw = 'fakepassword123'
     fobj = open(data_path, 'r')
     create(user, pw, fobj)
