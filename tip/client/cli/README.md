@@ -16,13 +16,7 @@ $ pip install ./tip/client/cli  # Initiate setup.py.
 
 ## Usage
 
-1. Run the following on the terminal to start running the server on your local:
-```
-$ cd tip/server
-$ npm install
-$ node index.js
-```
-2. Open another terminal and send requests to the back end from CLI:
+1. Open the terminal and send requests to the back end from CLI:
 ```
 $ tip-cli -h
 usage: tip-cli [-h] [-user [USER]] [-pw [PW]] [-infile [INFILE]] [-outfile [OUTFILE]] {gen-tmp,create,read,update,delete}
@@ -55,7 +49,7 @@ This should generate 5 MongoDB ObjectIDs in your NodeJS console.
 Before remove the directory of TIP, run the following command:
 
 ```console
-pip uninstall tip-client-cli
+pip uninstall tip-cli
 ```
 
 ## Authors
