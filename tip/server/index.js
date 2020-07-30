@@ -11,8 +11,9 @@ const compounds = require('./routers/compounds');
 const port = process.env.PORT || 8001;
 const app = express();
 const mongooseOptions = { useNewUrlParser: true, useUnifiedTopology: true };
+const url = 'mongodb+srv://admin:taglab@tip135@cluster0.fpktr.mongodb.net/tip?retryWrites=true&w=majority'
 
-mongoose.connect('mongodb://localhost/tip', mongooseOptions)
+mongoose.connect(url, mongooseOptions)
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.log('Could not connect to MongoDN...'))
 app.use(express.json());
