@@ -15,7 +15,7 @@ const url = 'mongodb+srv://admin:taglab@tip135@cluster0.fpktr.mongodb.net/tip?re
 
 mongoose.connect(url, mongooseOptions)
   .then(() => console.log('Connected to MongoDB...'))
-  .catch(err => console.log('Could not connect to MongoDB...'))
+  .catch(err => console.log(err))
 app.use(express.json());
 app.use('/compound', compounds);
 app.use('/database', database);
