@@ -47,6 +47,7 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:name', async (req, res) => {
+  console.log(req);
   // Finding by name (common names or IUPAC name).
   const courses = await Compound
     .find()
