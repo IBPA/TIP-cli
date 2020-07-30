@@ -39,10 +39,17 @@ $ tip-cli gen-tmp -outfile ../template.csv  # Custom output file
 This is called when a user uploads their data to the database on the back end. It requires the user to provide user name, password, and the path to the uploading data file. This will norify the back end to print your uploaded data on its console.
 ```console
 $ tip-cli create -user fzli -pw abc -infile path/to/uploading/data.csv
-$
 $ tip-cli create -user fzli -pw abc -infile tip/client/cli/tests/data_dummy.csv  # example
 ```
-This should generate 5 MongoDB ObjectIDs in your NodeJS console.
+This should create new data on the Mongo database.
+
+### Data read
+
+This allows user to read the data on the database given a keyword. This action will not change any information on the database. Currently it is case-sensitive, and it only searches keywords in compound names.
+```console
+$ tip-cli read -keywords Water
+```
+This should return a compound information along with its assay data.
 
 ### Uninstallation
 
