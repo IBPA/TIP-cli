@@ -4,9 +4,9 @@
  */
 const Joi = require('joi');
 const mongoose = require('mongoose');
+const { integer, float } = require('../utils/regex');
 
-/* TODO */
-const schema = new mongoose.Schema({
+const Assay = mongoose.model('Assay', new mongoose.Schema({
   protein: {
     type: String
   },
@@ -39,36 +39,37 @@ const schema = new mongoose.Schema({
     type: String,
     max: 1000
   }
-})
+}));
 
-const Assay = mongoose.model('Assay', schema);
+/* TODO */
+const joiSchema = {
+  protein: Joi.string(),
+  gene: Joi.string(),
+  ahr_type: Joi.string().valid('LB', 'DB', 'GE'),
+  species: Joi.string(),  // TODO
+  conc_substrate: Joi.string().regex(float),
+  conc_tested: Joi.string().regex(float),
+  inhibition: Joi.string().regex(float),
+  ec50: Joi.string().regex(float),
+  pmid: Joi.string(),  // TODO
+  comment: Joi.string().max(1000)
+};
 
-async function createAssay(assay) {
-  // Convert PMID string to an array.
+function validate(assay) {
+  return Joi.validate(assay, joiSchema);
+}
+
+async function createAssay(res, assay) {
+  const { error } = validate(assay);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  /* Convert PMID string to an array. */
   assay.pmid = assay.pmid.split(';');
+
   assayObject = await new Assay(assay).save();
   return assayObject._id;
 }
 
-/* TODO */
-function validate(assay) {
-  const schema = {
-    protein: Joi.string(),
-    gene: Joi.string(),
-    ahr_type: Joi.string(),
-    species: Joi.string(),
-    conc_subtrate: Joi.string(),
-    conc_tested: Joi.string(),
-    inhibition: Joi.string(),
-    ec50: Joi.string(),
-    pmid: Joi.string(),
-    comment: Joi.string()
-  };
-
-  return Joi.validate(assay, schema);
-}
-
 module.exports.Assay = Assay;
-module.exports.schemaAssay = schema;
+module.exports.schemaAssay = joiSchema;
 module.exports.createAssay = createAssay;
-module.exports.validateAssay = validate;
