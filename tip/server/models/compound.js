@@ -11,6 +11,7 @@
 
 const Joi = require('joi');
 const mongoose = require('mongoose');
+const CustomJoi = require('../utils/customJoi');
 const { schemaAssay } = require('./assay');
 const { integer, float } = require('../utils/regex');
 
@@ -52,22 +53,18 @@ const Compound = mongoose.model('Compound', new mongoose.Schema({
   }
 }));
 
-const joiSchema = {
+const schema = Joi.object({
   cid: Joi.string().regex(integer),
   cas: Joi.string().regex(/^[1-9]\d{1,6}-\d{2}-\d$/),  /* TODO */
-  common_names: Joi.string().max(1000),
+  common_names: CustomJoi.stringArray().items(Joi.string())
+    .prefs({ convert: true }),
   iupac_name: Joi.string().max(1000),
   inchikey: Joi.string().regex(/^[A-Z]{14}-[A-Z]{10}-[A-Z]$/),
   smiles: Joi.string(),  /* TODO */
   mw: Joi.string().regex(float),
   comment: Joi.string().max(1000),
   assays: Joi.array().items(schemaAssay),
-};
-
-function validate(data) {
-  return Joi.validate(data, joiSchema);
-}
+});
 
 module.exports.Compound = Compound;
-module.exports.schemaCompound = joiSchema;
-module.exports.validateCompound = validate;
+module.exports.schemaCompound = schema;

@@ -6,14 +6,14 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const { validateData } = require('../models/data');
+const { schemaData } = require('../models/data');
 const { Assay, createAssay } = require('../models/assay');
-const { Compound, validateCompound } = require('../models/compound');
+const { Compound, schemaCompound } = require('../models/compound');
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { error } = validateData(req.body);
+  const { error } = schemaData.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   for (let i = 0; i < req.body.compounds.length; i++) {
@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
     if (!existing.length) {
       /* Parse string data and prepare to store in the database. */
       compound.assays = assayIds;
-      compound.common_names = compound.common_names.split(';');
+      // compound.common_names = compound.common_names.split(';');
       await new Compound(compound).save();
     } else if (existing.length == 1) {
       existing[0].assays = existing[0].assays.concat(assayIds);
@@ -52,11 +52,11 @@ router.get('/:name', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  const { error } = validateCompound(req.body);
+  const { value, error } = schemaCompound.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const compound = await Compound.findByIdAndUpdate({ _id: req.params.id },
-    { $set: req.body }, { new: true });
+    { $set: value }, { new: true });
   if (!compound) return res.status(404).send('The compound with the given ID \
     does not exist.');
   res.status(200).send(compound);

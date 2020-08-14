@@ -63,9 +63,6 @@ def update(tid, query):
         fobj (str or file object): The CSV file containing data.
     """
     logging.info('Requesting to update data...')
-    # data = dict(
-    #     tid=tid,
-    #     )
     data = {}
     splitter = shlex.shlex(query[0], posix=True)
     splitter.whitespace = ','
@@ -81,13 +78,14 @@ def update(tid, query):
         key, value = param.split(':')
         data[key] = value
     res = requests.put(
-        url=ConfigNetwork.get_address() + '/' + type_value +'/' + tid,
+        url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid,
         json=data)
 
     if res.status_code == 400:
         logging.error(res.text)
     elif res.status_code == 200:
         print(res.text)
+
 
 def delete():
     """
