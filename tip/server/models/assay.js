@@ -1,6 +1,7 @@
 /**
  * TODO
  *   1. Elaborate schema.
+ *   2. what if duplicate assays?
  */
 const Joi = require('joi');
 const mongoose = require('mongoose');
@@ -73,3 +74,4 @@ async function createAssay(res, assay) {
 module.exports.Assay = Assay;
 module.exports.schemaAssay = joiSchema;
 module.exports.createAssay = createAssay;
+module.exports.validateAssay = validate;

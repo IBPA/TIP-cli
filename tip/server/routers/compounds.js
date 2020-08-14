@@ -6,23 +6,22 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const { Compound, validateCompound } = require('../models/compound');
+const { validateData } = require('../models/data');
 const { Assay, createAssay } = require('../models/assay');
+const { Compound, validateCompound } = require('../models/compound');
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { error } = validateCompound(req.body);
+  const { error } = validateData(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   for (let i = 0; i < req.body.compounds.length; i++) {
     let compound = req.body.compounds[i];
 
     /* Check if this compound already exists in the database. */
-    let existing = await Compound
-      .find()
+    let existing = await Compound.find()
       .or([{ cid: Number(compound.cid) }, { cas: Number(compound.cas) }]);
-
     let assays = compound.assays;
     let assayIds = [];
 
@@ -30,7 +29,6 @@ router.post('/', async (req, res) => {
     for (let j = 0; j < assays.length; j++) {
       assayIds.push(await createAssay(res, assays[j]));
     }
-
     if (!existing.length) {
       /* Parse string data and prepare to store in the database. */
       compound.assays = assayIds;
@@ -47,22 +45,21 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:name', async (req, res) => {
-  console.log(req);
-  // Finding by name (common names or IUPAC name).
-  const courses = await Compound
-    .find()
+  /* Finding by name (common names or IUPAC name). */
+  const courses = await Compound.find()
     .or([{ common_names: req.params.name }, { iupac_name: req.params.name }]);
   res.status(200).send(courses);
 });
 
-// router.put('/:id', async (req, res) => {
-//   const { error } = validateCompound(req.body);
-//   if (error) return res.status(400).send(error.details[0].message);
+router.put('/:id', async (req, res) => {
+  const { error } = validateCompound(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-//   const compound = await Compound
-//     .findByIdAndUpdate(req.params.id, {
-
-//     })
-// });
+  const compound = await Compound.findByIdAndUpdate({ _id: req.params.id },
+    { $set: req.body }, { new: true });
+  if (!compound) return res.status(404).send('The compound with the given ID \
+    does not exist.');
+  res.status(200).send(compound);
+});
 
 module.exports = router;

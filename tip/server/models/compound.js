@@ -6,6 +6,7 @@
  *       y: can leading digit be 0?
  *   3. SMILES: rules?
  *   4. all validation after SMILES, rules?
+ *   5. Check duplicate compounds that not in pubchem.
  */
 
 const Joi = require('joi');
@@ -42,7 +43,7 @@ const Compound = mongoose.model('Compound', new mongoose.Schema({
   assays: {
     type: [ mongoose.ObjectId ]
   },
-  uploader: {
+  uploader: {  // required in the future
     type: String
   },
   upload_date: {
@@ -51,25 +52,22 @@ const Compound = mongoose.model('Compound', new mongoose.Schema({
   }
 }));
 
+const joiSchema = {
+  cid: Joi.string().regex(integer),
+  cas: Joi.string().regex(/^[1-9]\d{1,6}-\d{2}-\d$/),  /* TODO */
+  common_names: Joi.string().max(1000),
+  iupac_name: Joi.string().max(1000),
+  inchikey: Joi.string().regex(/^[A-Z]{14}-[A-Z]{10}-[A-Z]$/),
+  smiles: Joi.string(),  /* TODO */
+  mw: Joi.string().regex(float),
+  comment: Joi.string().max(1000),
+  assays: Joi.array().items(schemaAssay),
+};
+
 function validate(data) {
-  const schema = {
-    count: Joi.number().integer().min(1),
-    compounds: Joi.array().items(Joi.object().keys({
-      cid: Joi.string().regex(integer),
-      cas: Joi.string().regex(/^[1-9]\d{1,6}-\d{2}-\d$/),  /* TODO */
-      common_names: Joi.string().max(1000),
-      iupac_name: Joi.string().max(1000),
-      inchikey: Joi.string().regex(/^[A-Z]{14}-[A-Z]{10}-[A-Z]$/),
-      smiles: Joi.string(),  /* TODO */
-      mw: Joi.string().regex(float),
-      comment: Joi.string().max(1000),
-      assays: Joi.array().items(schemaAssay),
-    })),
-    user: Joi.string().min(4),
-    pw: Joi.string()
-  };
-  return Joi.validate(data, schema);
+  return Joi.validate(data, joiSchema);
 }
 
 module.exports.Compound = Compound;
+module.exports.schemaCompound = joiSchema;
 module.exports.validateCompound = validate;
