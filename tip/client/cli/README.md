@@ -36,22 +36,33 @@ $ tip-cli gen-tmp -outfile ../template.csv  # Custom output file
 
 ### Data creation
 
-This is called when a user uploads their data to the database on the back end. It requires the user to provide user name, password, and the path to the uploading data file. This will norify the back end to print your uploaded data on its console.
+This is called when a user uploads their data to the database on the back end. It requires the path to the uploading data file. It will return response code and error to the user.
 ```console
-$ tip-cli create -user fzli -pw abc -infile path/to/uploading/data.csv
-$ tip-cli create -user fzli -pw abc -infile tip/client/cli/tests/data_dummy.csv  # example
+$ tip-cli create -infile path/to/uploading/data.csv
+$ tip-cli create -infile tip/client/cli/tests/data_dummy.csv  # example
 ```
-This should create new data on the Mongo database.
 
 ### Data read
 
-This allows user to read the data on the database given a keyword. This action will not change any information on the database. Currently it is case-sensitive, and it only searches keywords in compound names.
+This allows users to read the data on the database given a keyword. This action will not change any information on the database. Currently it is case-sensitive (e.g., 'a' VS. 'A'), and it only searches keywords in compound names. It will print the search result to the console and print error if it fails.
 ```console
 $ tip-cli read -keywords Water
 ```
-This should return a compound information along with its assay data.
 
-### Uninstallation
+### Data update
+
+This allows users to update specific fields of the data in the database. A user needs to provide a TID (TIP ID) of the data and a query which contains the information of updating fields and their new values. The query must follow these requirements:
+- Each parameter is a pair of a field and a value.
+- A field and a value are separated by exactly a colon.
+- The first parameter must be 'type:compound' or 'type:assay', indicating the data type you are updating.
+- Each parameter is separated by exactly a comma.
+- Use quotes for strings containing whitespace(s), (e.g., comments.)
+- Use semicolons for strings containing multiple values, (e.g., pmid.)
+```console
+$ tip-cli update -tid 5f360c170d5b10949c15b40e -query type:compound,comment:"You can spill it.",common_names:"Ice;Dihydrogen oxide"  # example of updating 'comment' field of 'Water' compound.
+```
+
+## Uninstallation
 
 Before remove the directory of TIP, run the following command:
 
