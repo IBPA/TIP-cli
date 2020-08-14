@@ -15,6 +15,7 @@ TODO:
     * update doc string
     * Examples.
     * commented comments removal
+    * should I consistently add prefix for all assay columns?
 """
 
 import numpy as np
@@ -40,7 +41,8 @@ def _convert_compound_df_to_json(df_compound):
     compound_dict = df_compound.iloc[0][HEADER_COMPOUND].dropna().to_dict()
 
     assays = []
-    df_compound[HEADER_ASSAY].apply(
+    # TODO
+    df_compound[HEADER_ASSAY].rename(columns={'comment2': 'comment'}).apply(
         lambda se: assays.append(se.dropna().to_dict()), axis=1)
     compound_dict['assays'] = assays
     return compound_dict
