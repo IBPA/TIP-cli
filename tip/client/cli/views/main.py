@@ -43,7 +43,6 @@ def parse_args(args):
     parser.add_argument('-outfile', nargs='?', type=argparse.FileType('w'),
                         help="The output "
                         "file name or path.")
-    parser.add_argument('-keywords', nargs='+', help='...')
     parser.add_argument('-tid', nargs='?', help='...')
     parser.add_argument('-query', nargs='*', help='...')
 
@@ -71,9 +70,9 @@ def parse_args(args):
         handler.create(args.infile)
 
     if args.req_type == 'read':
-        if not args.keywords:
-            raise SyntaxError('-keywords is required for reading data.')
-        handler.read(args.keywords)
+        if not args.query:
+            raise SyntaxError('-query is required for reading data.')
+        handler.read(args.query)
 
     if args.req_type == 'update':
         # if not args.user:
@@ -81,14 +80,18 @@ def parse_args(args):
         # if not args.pw:
         #     raise SyntaxError('-pw is required for updating data.')
         if not args.tid:
-            raise SyntaxError('-tid is required for updating data')
+            raise SyntaxError('-tid is required for updating data.')
         if not args.query:
-            raise SyntaxError('-query is required for updating data')
+            raise SyntaxError('-query is required for updating data.')
         # handler.update(args.user, args.pw, args.tid, args.query)
         handler.update(args.tid, args.query)
 
-    # delete
-
+    if args.req_type == 'delete':
+        if not args.tid:
+            raise SyntaxError('-tid is required for deleting data.')
+        if not args.query:
+            raise SyntaxError('-query is required for deleting data.')
+        handler.delete(args.tid, args.query)
     return args
 
 
