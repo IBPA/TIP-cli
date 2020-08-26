@@ -36,17 +36,15 @@ def parse_args(args):
     # TODO help
     parser.add_argument('req_type', choices=['gen-tmp', 'create', 'read',
                                              'update', 'delete'], help="...")
-
-    parser.add_argument('-user', nargs='?', help="...")
-
-    parser.add_argument('-pw', nargs='?', help="...")
-
+    # parser.add_argument('-user', nargs='?', help="...")
+    # parser.add_argument('-pw', nargs='?', help="...")
     parser.add_argument('-infile', nargs='?', type=argparse.FileType('r'),
                         help="The input file name or path.")
-
     parser.add_argument('-outfile', nargs='?', type=argparse.FileType('w'),
                         help="The output "
                         "file name or path.")
+    parser.add_argument('-tid', nargs='?', help='...')
+    parser.add_argument('-query', nargs='*', help='...')
 
     args = parser.parse_args(args)
 
@@ -62,20 +60,38 @@ def parse_args(args):
             csv.writer(f).writerow(hc + ha)
 
     if args.req_type == 'create':
-        if not args.user:
-            raise SyntaxError('-user is required for data creation.')
-        if not args.pw:
-            raise SyntaxError('-pw is required for data creation.')
+        # if not args.user:
+        #     raise SyntaxError('-user is required for creating data.')
+        # if not args.pw:
+        #     raise SyntaxError('-pw is required for creating data.')
         if not args.infile:
-            raise SyntaxError('-infile is required for data creation.')
-        handler.create(args.user, args.pw, args.infile)
+            raise SyntaxError('-infile is required for creating data.')
+        # handler.create(args.user, args.pw, args.infile)
+        handler.create(args.infile)
 
-    # read
+    if args.req_type == 'read':
+        if not args.query:
+            raise SyntaxError('-query is required for reading data.')
+        handler.read(args.query)
 
-    # update
+    if args.req_type == 'update':
+        # if not args.user:
+        #     raise SyntaxError('-user is required for updating data.')
+        # if not args.pw:
+        #     raise SyntaxError('-pw is required for updating data.')
+        if not args.tid:
+            raise SyntaxError('-tid is required for updating data.')
+        if not args.query:
+            raise SyntaxError('-query is required for updating data.')
+        # handler.update(args.user, args.pw, args.tid, args.query)
+        handler.update(args.tid, args.query)
 
-    # delete
-
+    if args.req_type == 'delete':
+        if not args.tid:
+            raise SyntaxError('-tid is required for deleting data.')
+        if not args.query:
+            raise SyntaxError('-query is required for deleting data.')
+        handler.delete(args.tid, args.query)
     return args
 
 

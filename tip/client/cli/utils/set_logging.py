@@ -8,11 +8,11 @@ Author:
 
 """
 
-
+from config import ConfigLogger
 import logging as log
 
 
-def set_logging(log_file=None, log_level=log.DEBUG):
+def set_logging(log_file=None, log_level=ConfigLogger.LEVEL):
     """Configure logging. By default, log to the console. If requested, log to
     a file specified by the user.
 

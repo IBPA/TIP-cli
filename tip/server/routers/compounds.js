@@ -1,45 +1,79 @@
 /**
  * TODO:
  *   1. More sophiscated reading mechanism.
- *   2. router.get returning database assigned value "__v", delete it.
+ *   2. create find existing compound is only checking cid and cas for now.
+ *   3. create assign id bug: should not doc += 1
  */
 
 const express = require('express');
 const mongoose = require('mongoose');
-const { Compound, validateCompound } = require('../models/compound');
-const { Assay, createAssay, validateAssay} = require('../models/assay');
+const { schemaData } = require('../models/data');
+const { Compound, schemaCompound } = require('../models/compound');
+const { Assay, createAssays, deleteAssays } = require('../models/assay');
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { error } = validateCompound(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+    const { value, error } = schemaData.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  for (let i = 0; i < req.body.compounds.length; i++) {
-    let compound = req.body.compounds[i];
-    let assays = compound.assays;
-    let assayIds = [];
+    const lastCompound = await Compound.findOne().sort('-_id').exec();
+    const lastAssay = await Assay.findOne().sort('-_id').exec();
+    let curCompoundID = (lastCompound !== null) ? lastCompound._id + 1 : 1;
+    let curAssayID = (lastAssay !== null) ? lastAssay._id + 1 : 1;
+    for (let i = 0; i < value.compounds.length; i++) {
+        let compound = value.compounds[i];
+        let assays = compound.assays;
 
-    for (let j = 0; j < assays.length; j++) {
-      let objectID = await createAssay(assays[j]);
-
-      assayIds.push(objectID);
-      console.log(objectID);
+        /* Check if this compound already exists in the database. */
+        let found = await Compound.find()
+            .or([{ cid: Number(compound.cid) },
+                { cas: Number(compound.cas) }]);
+        if (!found.length) {
+            /* Create new compound document. */
+            compound._id = curCompoundID++;
+            curAssayID = await createAssays(res, assays, curAssayID,
+                compound._id);
+            await new Compound(compound).save();
+        } else if (found.length == 1) {
+            /* Compound existing, do not create a new compound. */
+            curAssayID = await createAssays(res, assays, curAssayID,
+                found[0]._id);
+        } else {
+            return res.status(500).send(
+                `Server Error: Database debug needed.`);
+        }
     }
-    compound.common_names = compound.common_names.split(';');
-    compound.assays = assayIds;
-
-    await new Compound(compound).save();
-  }
-  res.status(200).send(`Added ${req.body.compounds.length} documents.`);
+    return res.status(200).send(
+        `Added ${req.body.compounds.length} documents.`);
 });
 
-router.get('/:name', async (req, res) => {
-  // Finding by name (common names or IUPAC name).
-  const courses = await Compound
-    .find()
-    .or([{ common_names: req.params.name }, { iupac_name: req.params.name }]);
-  res.status(200).send(courses);
+router.get('/', async (req, res) => {
+    const compounds = await Compound.find(req.query);
+    res.status(200).send(compounds);
+});
+
+router.put('/:id', async (req, res) => {
+    const { value, error } = schemaCompound.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const compound = await Compound.findByIdAndUpdate(
+        req.params.id,
+        { $set: value },
+        { new: true });
+    if (!compound) return res.status(404).send(
+        'The compound with the given ID does not exist.');
+    res.status(200).send(compound);
+});
+
+
+router.delete('/:id', async (req, res) => {
+    const compound = await Compound.findByIdAndRemove(req.params.id);
+    if (!compound) return res.status(404).send(
+        'The compound with the given ID does not exist.');
+
+    const assayLength = await deleteAssays(compound._id);
+    res.status(200).send(compound);
 });
 
 module.exports = router;
