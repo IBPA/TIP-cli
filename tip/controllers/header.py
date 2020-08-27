@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""cli/controllers/header.py description.
+"""tip/controllers/header.py description.
 
 This module defines a function that requests back end for the most up-to-date
 database headers.
@@ -13,6 +13,7 @@ TODO:
 import json
 import logging
 import requests
+from tip.config import ConfigNetwork
 
 
 def get_headers():
@@ -23,8 +24,8 @@ def get_headers():
 
     """
     logging.info('Requesting to get headers...')
-    req = requests.get(url='http://192.168.218.128:8001/database/header')
-    header_json = json.loads(req.text)
+    res = requests.get(url=ConfigNetwork.get_address() + '/database/header')
+    header_json = json.loads(res.text)
     header_compound = header_json['compound'].split(',')
     header_assay = header_json['assay'].split(',')
     return (header_compound, header_assay)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""cli/controllers/handler.py description
+"""tip/controllers/handler.py description
 
 This module defines functions for communicating with back end.
 
@@ -15,8 +15,8 @@ TODO:
 import shlex
 import logging
 import requests
-from config import ConfigNetwork
-from models import convert_csv_to_json
+from tip.config import ConfigNetwork
+from tip.models import convert_csv_to_json
 
 
 def create(fobj):

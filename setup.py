@@ -18,7 +18,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     # GitHub link.
-    url='https://github.com/IBPA/TIP/tree/master/tip/client/cli',
+    url='https://github.com/IBPA/TIP',
     author='Fangzhou Li',
     author_email='fzli@ucdavis.edu',
     classifiers=[
@@ -36,7 +36,7 @@ setup(
     keywords='',
     packages=find_packages(),
     entry_points={
-        'console_scripts': ['tip-cli=views.main:main']
+        'console_scripts': ['tip-cli=tip.views.main:main']
     },
     python_requires='>=3.6',
     install_requires=[
