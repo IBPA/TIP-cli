@@ -58,10 +58,10 @@ class UnitTester:
         return output
 
     def test(self):
-        # self.create()
+        self.create()
         # self.read()
         # self.update()
-        self.delete_assay()
+        # self.delete_assay()
 
 
 if __name__ == '__main__':

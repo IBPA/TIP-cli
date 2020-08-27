@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""cli/views/main.py description
+"""tip/views/main.py description
 
 This file contains the driver for the command-line interface (CLI).
 
@@ -18,8 +18,8 @@ import csv
 import sys
 import logging
 import argparse
-from utils import set_logging
-from controllers import handler, get_headers
+from tip.utils import set_logging
+from tip.controllers import handler, get_headers
 
 
 def parse_args(args):

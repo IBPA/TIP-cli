@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""cli/utils/logger.py description
+"""tip/utils/logger.py description
 
 This module simplifies the built-in logging module
 
@@ -8,8 +8,8 @@ Author:
 
 """
 
-from config import ConfigLogger
-import logging as log
+import logging
+from tip.config import ConfigLogger
 
 
 def set_logging(log_file=None, log_level=ConfigLogger.LEVEL):
@@ -22,22 +22,22 @@ def set_logging(log_file=None, log_level=ConfigLogger.LEVEL):
 
     """
     # create logger
-    logger = log.getLogger()
+    logger = logging.getLogger()
     logger.setLevel(log_level)
 
     # create formatter
-    formatter = log.Formatter(
+    formatter = logging.Formatter(
         '%(asctime)s %(levelname)s %(filename)s: %(message)s')
 
     # create and set file handler if requested
     if log_file:
-        file_handler = log.FileHandler(log_file)
+        file_handler = logging.FileHandler(log_file)
         file_handler.setLevel(log_level)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 
     # create and set console handler
-    stream_handler = log.StreamHandler()
+    stream_handler = logging.StreamHandler()
     stream_handler.setLevel(log_level)
     stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)

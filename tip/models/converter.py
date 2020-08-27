@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""cli/models/convert.py description.
+"""tip/models/convert.py description.
 
 This module defines functions that help data format conversion, i.e.,
 CSV to JSON.
@@ -18,10 +18,10 @@ TODO:
     * should I consistently add prefix for all assay columns?
 """
 
+import logging
 import numpy as np
 import pandas as pd
-import logging
-from controllers import get_headers
+from tip.controllers import get_headers
 
 
 HEADER_COMPOUND, HEADER_ASSAY = get_headers()
