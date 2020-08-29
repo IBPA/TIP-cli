@@ -71,6 +71,12 @@ Example:
 $ tip-cli update -tid 1 -query type:compound # Deleting compound data with TID of 1.
 ```
 
+### 1c. Uninstallation
+
+```console
+$ pip uninstall ./TIP
+```
+
 ## 2. Authors
 
 - **Fang Li** @ https://github.com/fangzhouli
