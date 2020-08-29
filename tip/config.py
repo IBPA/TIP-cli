@@ -12,7 +12,7 @@ import logging
 class ConfigNetwork:
     """
     """
-    HOST = '18.221.84.133'  # IP address of the server on AWS EC2.
+    HOST = '3.137.114.158'  # IP address of the server on AWS EC2.
 
     @staticmethod
     def get_address():
