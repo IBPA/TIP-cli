@@ -8,7 +8,7 @@ This project is actively under the development. For more recent information, ple
 
 ### 1a. Installation
 ```
-$ git clone git@github.com:IBPA/TIP.git  # Clone the repository to your machine.
+$ git clone https://github.com/IBPA/TIP.git  # Clone the repository to your machine.
 $ pip install ./TIP  # Initiate setup.py.
 ```
 Check if the package is correctly installed by
