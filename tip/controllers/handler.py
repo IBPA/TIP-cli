@@ -10,6 +10,8 @@ TODO:
     - Read method.
     - refactor: shlex
     - read cli and restful different?
+    - logging: create - send info from server.
+    - Error definition?
 """
 
 import shlex
@@ -30,21 +32,17 @@ def create(fobj):
     """
     logging.info('Requesting to create data...')
     data_json = convert_csv_to_json(fobj)
-    # so if we were to use user & pw in the future,
-    # do we send these without any encryption to the server using json format?
-    # Are we going to be using https?
-
     # data_json['user'] = user
     # data_json['pw'] = pw
-    # 192.168.218.128
     res = requests.post(url=ConfigNetwork.get_address() + '/compound',
                         json=data_json)
 
-    # put logging about the return code even if the code was not 400.
-    # It's always good practice to put these for debudding purpose.
-
-    if res.status_code == 400:
+    if res.status_code == 200:
+        logging.info('Creating data is finished.')
+        return res.text
+    else:
         logging.error(res.text)
+        raise RuntimeError("Data creating has failed.")
 
 
 def read(query):
@@ -90,9 +88,12 @@ def read(query):
     # put logging about the return code even if the code was not 400.
     # It's always good practice to put these for debudding purpose.
 
-    if res.status_code == 400:
+    if res.status_code == 200:
+        logging.info(res.text)
+        return res.text
+    else:
         logging.error(res.text)
-    print(res.text)  # remove this
+        raise RuntimeError("Data reading has failed.")
 
 
 def update(tid, query):
@@ -110,6 +111,7 @@ def update(tid, query):
                 (e.g., comments.)
             - Use semicolons for strings containing multiple values,
                 (e.g., pmid.)
+
     """
     logging.info('Requesting to update data...')
     data = {}
@@ -132,10 +134,12 @@ def update(tid, query):
     # similar to above, put log in every possible step (debug)
     # Also put log for the return code.
 
-    if res.status_code == 400:
+    if res.status_code == 200:
+        logging.info(res.text)
+        return res.text
+    else:
         logging.error(res.text)
-    elif res.status_code == 200:
-        print(res.text)
+        raise RuntimeError("Data updating has failed.")
 
 
 def delete(tid, query):
@@ -146,6 +150,7 @@ def delete(tid, query):
         tid (str): The TIP Id of deleting data.
         query (str): Similar to query of updating, but only requires the data
             type field.
+
     """
     logging.info('Requesting to delete data...')
     splitter = shlex.shlex(query[0], posix=True)
@@ -159,7 +164,9 @@ def delete(tid, query):
     # similar to above, put log in every possible step (debug)
     # Also put log for the return code.
 
-    if res.status_code == 400:
+    if res.status_code == 200:
+        logging.info(res.text)
+        return res.text
+    else:
         logging.error(res.text)
-    elif res.status_code == 200:
-        print(res.text)
+        raise RuntimeError("Data deleting has failed.")
