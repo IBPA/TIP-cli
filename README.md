@@ -4,9 +4,16 @@ TIP (Toxicological Integrated Platform) provides a digital resource that
 - stores and integrates data from the labs that are part of the SRP center in UCD,
 - enables access to data for both internal and external partners through an application programming interface (API).
 
+## 0. TODO
+
+1. CLI arguments flags '--' or '-'? '--' for long options, '-' for shorter options (code + readme)
+2. CLI help (code)
+3. Encryption / HTTPS Phase 2
+4. Handler - Logging rules
+
 ## 1. Getting Started
 
-This project is under active development. For more recent updates, please check out the development branch https://github.com/IBPA/TIP/tree/dev.
+This project is under an active development. For more recent updates, please check out the development branch https://github.com/IBPA/TIP/tree/dev.
 
 ### 1a. Installation
 ```
@@ -14,7 +21,6 @@ $ git clone https://github.com/IBPA/TIP.git  # Clone the repository to your mach
 $ pip install ./TIP  # Initiate setup.py.
 ```
 Check if the package is correctly installed by
-<!-- Make sure that you update this by changing the command to tip-cli --help -->
 ```
 $ tip-cli
 ```
@@ -25,7 +31,6 @@ $ tip-cli
 
 Use this command to download the data template which will be used when uploading the data. CLI sends a request to the back-end to retrieve the most recent data template. The default file name is ```output.csv``` which stored at the current path.
 
-<!-- Make sure to change the argument to have double hyphen (--) -->
 Example:
 ```console
 $ tip-cli gen-tmp  # Default output file, 'output.csv'
@@ -39,7 +44,7 @@ Use this command to upload data to the database. The command requires the path t
 Example:
 ```console
 $ tip-cli create -infile path/to/your/uploading/file.csv
-$ tip-cli create -infile tip/client/cli/tests/data_dummy.csv  # example (Change the dummay file path to tip/tests/data_dummy.csv)
+$ tip-cli create -infile tip/tests/data_dummy.csv  # example
 ```
 
 #### Data read
