@@ -25,7 +25,7 @@ setup(
         'Development Status :: 1 - Planning',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: MIT License',  # we use GPL-3.0 license, please check
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
