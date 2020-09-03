@@ -33,6 +33,11 @@ def parse_args(args):
 
     """
     parser = argparse.ArgumentParser()
+    # Yes, let's put the --help -h option in.
+    # That is the first thing a user would do to check the cli.
+    # Also, I think it's a convention to use -- instead of single -
+    # for long argument (e.g. -infile -> --infile).
+    # Single - is used for single character argument (e.g. -i for --infile).
     # TODO help
     parser.add_argument('req_type', choices=['gen-tmp', 'create', 'read',
                                              'update', 'delete'], help="...")
@@ -47,6 +52,11 @@ def parse_args(args):
     parser.add_argument('-query', nargs='*', help='...')
 
     args = parser.parse_args(args)
+
+    # Isn't it usual to just return the args variable above right now
+    # and use the returned args variable in the main() function?
+    # Basically, all the if statements in the bottom would be moved
+    # to the main() function.
 
     if args.req_type == 'gen-tmp':
         if not args.outfile:
@@ -96,5 +106,13 @@ def parse_args(args):
 
 
 def main():
+    # For me, variable __file__ points to
+    # /home/jyoun/.local/lib/python3.6/site-packages/tip/views/main.py
+    # and I cannot find a log file.www
+    # First question is, do we always have to dump the log to a file?
+    # Maybe we should consider dumping it IF the user prompts to.
+    # For example, we can set up an input argument such as --logfile
+    # to have the user specify the location of the dump.
+    # Otherwise, we can just print log to the console.
     set_logging(__file__ + '.log')
     parse_args(sys.argv[1:])

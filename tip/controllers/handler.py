@@ -30,11 +30,19 @@ def create(fobj):
     """
     logging.info('Requesting to create data...')
     data_json = convert_csv_to_json(fobj)
+    # so if we were to use user & pw in the future,
+    # do we send these without any encryption to the server using json format?
+    # Are we going to be using https?
+
     # data_json['user'] = user
     # data_json['pw'] = pw
     # 192.168.218.128
     res = requests.post(url=ConfigNetwork.get_address() + '/compound',
                         json=data_json)
+
+    # put logging about the return code even if the code was not 400.
+    # It's always good practice to put these for debudding purpose.
+
     if res.status_code == 400:
         logging.error(res.text)
 
@@ -65,17 +73,26 @@ def read(query):
     if type_key != 'type' or type_value not in ['compound', 'assay']:
         raise SyntaxError("The first parameter of query must be data type.")
 
+    # let's put a log here that logs the type_key, type_value
+
     req_query_list = []
     for param in params[1:]:
         key, value = param.split(':')
         req_query_list.append(key + '=' + value)
     req_query = '&'.join(req_query_list)
+
+    # also put a log on what this req_query is.
+    # btw, all these logs should be set to level debug.
+
     res = requests.get(
         url=ConfigNetwork.get_address() + '/' + type_value + '?' + req_query)
 
+    # put logging about the return code even if the code was not 400.
+    # It's always good practice to put these for debudding purpose.
+
     if res.status_code == 400:
         logging.error(res.text)
-    print(res.text)
+    print(res.text)  # remove this
 
 
 def update(tid, query):
@@ -112,6 +129,9 @@ def update(tid, query):
         url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid,
         json=data)
 
+    # similar to above, put log in every possible step (debug)
+    # Also put log for the return code.
+
     if res.status_code == 400:
         logging.error(res.text)
     elif res.status_code == 200:
@@ -135,6 +155,9 @@ def delete(tid, query):
     type_value = params[0].split(':')[1]
     res = requests.delete(
         url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid)
+
+    # similar to above, put log in every possible step (debug)
+    # Also put log for the return code.
 
     if res.status_code == 400:
         logging.error(res.text)

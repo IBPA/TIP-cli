@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# ctags
+.tags
+.tags_sorted_by_file
+
 # Distribution / packaging
 .Python
 build/
