@@ -6,10 +6,8 @@ TIP (Toxicological Integrated Platform) provides a digital resource that
 
 ## 0. TODO
 
-1. CLI arguments flags '--' or '-'? '--' for long options, '-' for shorter options (code + readme)
-2. CLI help (code)
-3. Encryption / HTTPS Phase 2
-4. Handler - Logging rules
+1. Encryption / HTTPS Phase 2
+2. Handler - Logging rules
 
 ## 1. Getting Started
 
@@ -34,7 +32,7 @@ Use this command to download the data template which will be used when uploading
 Example:
 ```console
 $ tip-cli gen-tmp  # Default output file, 'output.csv'
-$ tip-cli gen-tmp -outfile ../template.csv  # Custom output file
+$ tip-cli gen-tmp --outfile ../template.csv  # Custom output file
 ```
 
 #### Data creation
@@ -43,8 +41,7 @@ Use this command to upload data to the database. The command requires the path t
 
 Example:
 ```console
-$ tip-cli create -infile path/to/your/uploading/file.csv
-$ tip-cli create -infile tip/tests/data_dummy.csv  # example
+$ tip-cli create --infile path/to/your/uploading/file.csv
 ```
 
 #### Data read
@@ -59,7 +56,7 @@ Use this command to read the data on the database given a keyword. This action w
 
 Example:
 ```console
-$ tip-cli read -query type:compound,cid:962
+$ tip-cli read --query type:compound,cid:962
 ```
 
 #### Data update
@@ -68,7 +65,7 @@ Use this command to update specific fields of the data in the database. The user
 
 Example:
 ```console
-$ tip-cli update -tid 1 -query type:compound,comment:"You can spill it.",common_names:"Ice;Dihydrogen oxide"  # Updating 'comment' field of 'Water' compound.
+$ tip-cli update --tid 1 --query type:compound,comment:"You can spill it.",common_names:"Ice;Dihydrogen oxide"  # Updating 'comment' field of 'Water' compound.
 ```
 
 #### Data delete
@@ -77,7 +74,7 @@ Use this command to delete data that are already created by specifying the TID o
 
 Example:
 ```console
-$ tip-cli update -tid 1 -query type:compound # Deleting compound data with TID of 1.
+$ tip-cli update --tid 1 --query type:compound # Deleting compound data with TID of 1.
 ```
 
 ### 1c. Uninstallation
