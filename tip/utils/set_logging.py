@@ -8,6 +8,7 @@ Author:
 
 """
 
+import sys
 import logging
 from tip.config import ConfigLogger
 
