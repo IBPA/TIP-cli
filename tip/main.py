@@ -68,14 +68,6 @@ def main():
     """Command-line interface driver. See `tip-cli -h` for more help.
 
     """
-    # For me, variable __file__ points to
-    # /home/jyoun/.local/lib/python3.6/site-packages/tip/views/main.py
-    # and I cannot find a log file.www
-    # First question is, do we always have to dump the log to a file?
-    # Maybe we should consider dumping it IF the user prompts to.
-    # For example, we can set up an input argument such as --logfile
-    # to have the user specify the location of the dump.
-    # Otherwise, we can just print log to the console.
     args = parse_args(sys.argv[1:])
     hc, ha = crud.read_headers()
     if not args.logfile:
