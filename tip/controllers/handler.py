@@ -10,6 +10,8 @@ TODO:
     - Read method.
     - refactor: shlex
     - read cli and restful different?
+    - logging: create - send info from server.
+    - Error definition?
 """
 
 import shlex
@@ -32,11 +34,15 @@ def create(fobj):
     data_json = convert_csv_to_json(fobj)
     # data_json['user'] = user
     # data_json['pw'] = pw
-    # 192.168.218.128
     res = requests.post(url=ConfigNetwork.get_address() + '/compound',
                         json=data_json)
-    if res.status_code == 400:
+
+    if res.status_code == 200:
+        logging.info('Creating data is finished.')
+        return res.text
+    else:
         logging.error(res.text)
+        raise RuntimeError("Data creating has failed.")
 
 
 def read(query):
@@ -65,17 +71,29 @@ def read(query):
     if type_key != 'type' or type_value not in ['compound', 'assay']:
         raise SyntaxError("The first parameter of query must be data type.")
 
+    # let's put a log here that logs the type_key, type_value
+
     req_query_list = []
     for param in params[1:]:
         key, value = param.split(':')
         req_query_list.append(key + '=' + value)
     req_query = '&'.join(req_query_list)
+
+    # also put a log on what this req_query is.
+    # btw, all these logs should be set to level debug.
+
     res = requests.get(
         url=ConfigNetwork.get_address() + '/' + type_value + '?' + req_query)
 
-    if res.status_code == 400:
+    # put logging about the return code even if the code was not 400.
+    # It's always good practice to put these for debudding purpose.
+
+    if res.status_code == 200:
+        logging.info(res.text)
+        return res.text
+    else:
         logging.error(res.text)
-    print(res.text)
+        raise RuntimeError("Data reading has failed.")
 
 
 def update(tid, query):
@@ -93,6 +111,7 @@ def update(tid, query):
                 (e.g., comments.)
             - Use semicolons for strings containing multiple values,
                 (e.g., pmid.)
+
     """
     logging.info('Requesting to update data...')
     data = {}
@@ -112,10 +131,15 @@ def update(tid, query):
         url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid,
         json=data)
 
-    if res.status_code == 400:
+    # similar to above, put log in every possible step (debug)
+    # Also put log for the return code.
+
+    if res.status_code == 200:
+        logging.info(res.text)
+        return res.text
+    else:
         logging.error(res.text)
-    elif res.status_code == 200:
-        print(res.text)
+        raise RuntimeError("Data updating has failed.")
 
 
 def delete(tid, query):
@@ -126,6 +150,7 @@ def delete(tid, query):
         tid (str): The TIP Id of deleting data.
         query (str): Similar to query of updating, but only requires the data
             type field.
+
     """
     logging.info('Requesting to delete data...')
     splitter = shlex.shlex(query[0], posix=True)
@@ -136,7 +161,12 @@ def delete(tid, query):
     res = requests.delete(
         url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid)
 
-    if res.status_code == 400:
+    # similar to above, put log in every possible step (debug)
+    # Also put log for the return code.
+
+    if res.status_code == 200:
+        logging.info(res.text)
+        return res.text
+    else:
         logging.error(res.text)
-    elif res.status_code == 200:
-        print(res.text)
+        raise RuntimeError("Data deleting has failed.")
