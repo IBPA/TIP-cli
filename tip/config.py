@@ -22,4 +22,4 @@ class ConfigNetwork:
 class ConfigLogger:
     """
     """
-    LEVEL = logging.WARNING
+    LEVEL = logging.DEBUG

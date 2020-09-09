@@ -36,7 +36,7 @@ setup(
     keywords='',
     packages=find_packages(),
     entry_points={
-        'console_scripts': ['tip-cli=tip.views.main:main']
+        'console_scripts': ['tip-cli=tip.main:main']
     },
     python_requires='>=3.6',
     install_requires=[
