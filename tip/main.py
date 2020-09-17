@@ -18,8 +18,8 @@ import csv
 import sys
 import logging
 import argparse
+import textwrap
 from tip.db import crud
-from tip.utils import set_logging
 
 
 def parse_args(args):
@@ -32,7 +32,8 @@ def parse_args(args):
         (dict): Parsed arguments
 
     """
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         'req_type',
         choices=['gen-tmp', 'create', 'read', 'update', 'delete'],
@@ -50,16 +51,23 @@ def parse_args(args):
     parser.add_argument(
         '--tid', '-T',
         nargs='?',
-        help='The TIP ID (TID) associated with your query.')
+        help='The TIP ID (TID) associated with your request.')
     parser.add_argument(
-        '--query', '-Q',
+        '--fields', '-Q',
         nargs='*',
-        help='The query for your request.')
+        help='The fields of data associated with your request.')
     parser.add_argument(
-        '--logfile', '-L',
-        nargs='?',
-        type=argparse.FileType('w'),
-        help='The path to your log file.')
+        '--log-level', '-L',
+        choices=[10, 20, 30, 40, 50],
+        default=20,
+        type=int,
+        help=textwrap.dedent('''\
+        The specified log level:
+            50 - CRITICAL
+            40 - ERROR
+            30 - WARNING
+            20 - INFO
+            10 - DEBUG'''))
 
     return parser.parse_args(args)
 
@@ -69,11 +77,11 @@ def main():
 
     """
     args = parse_args(sys.argv[1:])
-    hc, ha = crud.read_headers()
-    if not args.logfile:
-        set_logging()
-    else:
-        set_logging(args.logfile.name)
+
+    logging.basicConfig(
+        level=args.log_level,
+        format='%(asctime)s %(levelname)s %(filename)s: %(message)s')
+
     if args.req_type == 'gen-tmp':
         if not args.outfile:
             outfile_name = 'output.csv'
@@ -81,25 +89,27 @@ def main():
             outfile_name = args.outfile.name
         logging.info(
             'Generating data template file {}'.format(outfile_name))
+        hc, ha = crud.read_headers()
         with open(outfile_name, 'w') as f:
             csv.writer(f).writerow(hc + ha)
     elif args.req_type == 'create':
         if not args.infile:
-            raise SyntaxError('-infile is required for creating data.')
+            raise SyntaxError('--infile is required for creating data.')
+        hc, ha = crud.read_headers()
         crud.create(args.infile, hc, ha)
     elif args.req_type == 'read':
-        if not args.query:
-            raise SyntaxError('-query is required for reading data.')
-        crud.read(args.query[0])
+        if not args.fields:
+            raise SyntaxError('--fields is required for reading data.')
+        crud.read(args.fields[0])
     elif args.req_type == 'update':
         if not args.tid:
-            raise SyntaxError('-tid is required for updating data.')
-        if not args.query:
-            raise SyntaxError('-query is required for updating data.')
-        crud.update(args.tid, args.query[0])
+            raise SyntaxError('--tid is required for updating data.')
+        if not args.fields:
+            raise SyntaxError('--fields is required for updating data.')
+        crud.update(args.tid, args.fields[0])
     elif args.req_type == 'delete':
         if not args.tid:
-            raise SyntaxError('-tid is required for deleting data.')
-        if not args.query:
-            raise SyntaxError('-query is required for deleting data.')
-        crud.delete(args.tid, args.query[0])
+            raise SyntaxError('--tid is required for deleting data.')
+        if not args.fields:
+            raise SyntaxError('--fields is required for deleting data.')
+        crud.delete(args.tid, args.fields[0])
