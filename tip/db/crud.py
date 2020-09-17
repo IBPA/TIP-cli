@@ -19,7 +19,7 @@ import json
 import logging
 import requests
 from tip.config import ConfigNetwork
-from tip.utils import convert_csv_to_json, split_fields
+from tip.utils import convert_csv_to_json, split_values
 
 
 def create(fobj, header_compound, header_assay):
@@ -44,11 +44,11 @@ def create(fobj, header_compound, header_assay):
         raise RuntimeError('Data creating has failed.')
 
 
-def read(fields):
+def read(values):
     """Send requests for reading existing documents on the database.
 
     Args:
-        fields (str): A fields to indicate fields and values for updating.
+        values (str): A string to indicate fields and values for updating.
 
     Returns:
         (str): The response from the server.
@@ -56,20 +56,20 @@ def read(fields):
     """
     logging.info('Requesting to read data...')
 
-    # Parse cli fields
-    params = split_fields(fields)
+    # Parse cli values
+    params = split_values(values)
     type_key, type_value = params[0].split(':')
     if type_key != 'type' or type_value not in ['compound', 'assay']:
-        raise SyntaxError('The first parameter of fields must be data type.')
+        raise SyntaxError('The first parameter of values must be data type.')
     logging.debug('Key: ' + type_key + ', Value: ' + type_value)
 
-    # Construct database fields.
+    # Construct database values.
     req_query_list = []
     for param in params[1:]:
         key, value = param.split(':')
         req_query_list.append(key + '=' + value)
     req_query = '&'.join(req_query_list)
-    logging.debug('Requested fields: ' + req_query)
+    logging.debug('Requested values: ' + req_query)
 
     # Retrieve the response.
     res = requests.get(
@@ -99,12 +99,12 @@ def read_headers():
     return (header_compound, header_assay)
 
 
-def update(tid, fields):
+def update(tid, values):
     """Send requests for updating existing documents on the database.
 
     Args:
         tid (str): The TIP Id of updating data.
-        fields (str): A fields to indicate fields and values for updating.
+        values (str): A string to indicate fields and values for updating.
 
     Returns:
         (str): The response from the server.
@@ -114,14 +114,14 @@ def update(tid, fields):
 
     data = {}
 
-    # Parse cli fields.
-    params = split_fields(fields)
+    # Parse cli values.
+    params = split_values(values)
     type_key, type_value = params[0].split(':')
     if type_key != 'type' or type_value not in ['compound', 'assay']:
-        raise SyntaxError('The first parameter of fields must be data type.')
+        raise SyntaxError('The first parameter of values must be data type.')
     logging.debug('Key: ' + type_key + ', Value: ' + type_value)
 
-    # Construct database fields and retrieve.
+    # Construct database values and retrieve.
     for param in params[1:]:
         key, value = param.split(':')
         data[key] = value
@@ -136,13 +136,13 @@ def update(tid, fields):
         raise RuntimeError('Data updating has failed.')
 
 
-def delete(tid, fields):
+def delete(tid, values):
     """Send requests for deleting and returning existing documents on the
     database.
 
     Args:
         tid (str): The TIP Id of deleting data.
-        fields (str): A fields to indicate fields and values for updating.
+        values (str): A string to indicate fields and values for updating.
 
     Returns:
         (str): The response from the server.
@@ -150,8 +150,8 @@ def delete(tid, fields):
     """
     logging.info('Requesting to delete data...')
 
-    # Parse cli fields and request.
-    params = split_fields(fields)
+    # Parse cli values and request.
+    params = split_values(values)
     type_value = params[0].split(':')[1]
     res = requests.delete(
         url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid)

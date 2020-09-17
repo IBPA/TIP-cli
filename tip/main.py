@@ -53,10 +53,10 @@ def parse_args(args):
         nargs='?',
         help="The TIP ID (TID) associated with your request.")
     parser.add_argument(
-        '--fields', '-Q',
+        '--values', '-Q',
         nargs='*',
         help=textwrap.dedent("""\
-        The fields of data associated with your request:
+        The values of fields of data associated with your request:
         - Each parameter is a pair of a field and a value.
         - A field and a value are separated by exactly a colon.
         - The first parameter must be 'type:compound' or 'type:assay',
@@ -92,7 +92,7 @@ def main():
 
     if args.req_type == 'gen-tmp':
         if not args.outfile:
-            outfile_name = 'output.csv'
+            outfile_name = 'template.csv'
         else:
             outfile_name = args.outfile.name
         logging.info(
@@ -106,18 +106,18 @@ def main():
         hc, ha = crud.read_headers()
         crud.create(args.infile, hc, ha)
     elif args.req_type == 'read':
-        if not args.fields:
-            raise SyntaxError('--fields is required for reading data.')
-        crud.read(args.fields[0])
+        if not args.values:
+            raise SyntaxError('--values is required for reading data.')
+        crud.read(args.values[0])
     elif args.req_type == 'update':
         if not args.tid:
             raise SyntaxError('--tid is required for updating data.')
-        if not args.fields:
-            raise SyntaxError('--fields is required for updating data.')
-        crud.update(args.tid, args.fields[0])
+        if not args.values:
+            raise SyntaxError('--values is required for updating data.')
+        crud.update(args.tid, args.values[0])
     elif args.req_type == 'delete':
         if not args.tid:
             raise SyntaxError('--tid is required for deleting data.')
-        if not args.fields:
-            raise SyntaxError('--fields is required for deleting data.')
-        crud.delete(args.tid, args.fields[0])
+        if not args.values:
+            raise SyntaxError('--values is required for deleting data.')
+        crud.delete(args.tid, args.values[0])
