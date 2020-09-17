@@ -1,17 +1,7 @@
 # -*- coding: utf-8 -*-
 """tip/db/crud.py description
 
-This module defines functions for communicating with the TIP server. Some
-database operations require a query argument, and the format of query argument
-is the following:
-- Each parameter is a pair of a field and a value.
-- A field and a value are separated by exactly a colon.
-- The first parameter must be 'type:compound' or 'type:assay', indicating the
-    data type you are updating.
-- Each parameter is separated by exactly a comma.
-- Use quotes for strings containing whitespace(s), (e.g., comments.)
-- Use semicolons for strings containing multiple values, (e.g., pmid.)
-See documentation for examples.
+This module defines functions for sending RESTful requests to the TIP server.
 
 Author:
     Fangzhou Li: https://github.com/fangzhouli

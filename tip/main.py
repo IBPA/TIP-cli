@@ -37,7 +37,7 @@ def parse_args(args):
     parser.add_argument(
         'req_type',
         choices=['gen-tmp', 'create', 'read', 'update', 'delete'],
-        help='Select a type of your request.')
+        help="Select a type of your request.")
     parser.add_argument(
         '--infile', '-I',
         nargs='?',
@@ -51,24 +51,32 @@ def parse_args(args):
     parser.add_argument(
         '--tid', '-T',
         nargs='?',
-        help='The TIP ID (TID) associated with your request.')
+        help="The TIP ID (TID) associated with your request.")
     parser.add_argument(
         '--fields', '-Q',
         nargs='*',
-        help='The fields of data associated with your request.')
+        help=textwrap.dedent("""\
+        The fields of data associated with your request:
+        - Each parameter is a pair of a field and a value.
+        - A field and a value are separated by exactly a colon.
+        - The first parameter must be 'type:compound' or 'type:assay',
+            indicating the data type you are updating.
+        - Each parameter is separated by exactly a comma.
+        - Use quotes for strings containing whitespace(s), (e.g., comments.)
+        - Use semicolon/s for strings containing multiple values,
+            (e.g., pmid.)"""))
     parser.add_argument(
         '--log-level', '-L',
         choices=[10, 20, 30, 40, 50],
         default=20,
         type=int,
-        help=textwrap.dedent('''\
+        help=textwrap.dedent("""\
         The specified log level:
-            50 - CRITICAL
-            40 - ERROR
-            30 - WARNING
-            20 - INFO
-            10 - DEBUG'''))
-
+        - 50: CRITICAL
+        - 40: ERROR
+        - 30: WARNING
+        - 20: INFO
+        - 10: DEBUG"""))
     return parser.parse_args(args)
 
 
