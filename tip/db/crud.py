@@ -32,17 +32,19 @@ def create(fobj, header_compound, header_assay):
         (str): The response from the server.
 
     """
-    logging.info('Requesting to create data...')
+    logging.info("Requesting to create data...")
 
     data_json = convert_csv_to_json(fobj, header_compound, header_assay)
     res = requests.post(url=ConfigNetwork.get_address() + '/compound',
                         json=data_json)
     if res.status_code == 200:
-        logging.debug('Status: 200, ' + res.text)
+        logging.debug("Status: 200, " + res.text)
         return res.text
     else:
         logging.error(res.text)
-        raise RuntimeError('Data creating has failed.')
+        raise RuntimeError("Data creating has failed.")
+
+    logging.info("Created successfully!")
 
 
 def read(values):
@@ -55,14 +57,14 @@ def read(values):
         (str): The response from the server.
 
     """
-    logging.info('Requesting to read data...')
+    logging.info("Requesting to read data...")
 
     # Parse cli values
     params = split_values(values)
     type_key, type_value = params[0].split(':')
     if type_key != 'type' or type_value not in ['compound', 'assay']:
-        raise SyntaxError('The first parameter of values must be data type.')
-    logging.debug('Key: ' + type_key + ', Value: ' + type_value)
+        raise SyntaxError("The first parameter of values must be data type.")
+    logging.debug("Key: " + type_key + ", Value: " + type_value)
 
     # Construct database values.
     req_query_list = []
@@ -70,17 +72,19 @@ def read(values):
         key, value = param.split(':')
         req_query_list.append(key + '=' + value)
     req_query = '&'.join(req_query_list)
-    logging.debug('Requested values: ' + req_query)
+    logging.debug("Requested values: " + req_query)
 
     # Retrieve the response.
     res = requests.get(
         url=ConfigNetwork.get_address() + '/' + type_value + '?' + req_query)
     if res.status_code == 200:
-        logging.debug('Status: 200, ' + res.text)
+        logging.debug("Status: 200, " + res.text)
         return res.text
     else:
-        logging.error('Status: ' + str(res.status_code) + ', ' + res.text)
-        raise RuntimeError('Data reading has failed.')
+        logging.error("Status: " + str(res.status_code) + ", " + res.text)
+        raise RuntimeError("Data reading has failed.")
+
+    logging.info("Read successfully!")
 
 
 def read_headers():
@@ -90,14 +94,16 @@ def read_headers():
         header_compound, header_assay (tuple): Two lists of headers.
 
     """
-    logging.info('Requesting to get headers...')
+    logging.info("Requesting to read headers...")
 
-    res = requests.get(url=ConfigNetwork.get_address() + '/database/header')
+    res = requests.get(url=ConfigNetwork.get_address() + "/database/header")
     header_json = json.loads(res.text)
     header_compound = header_json['compound'].split(',')
     header_assay = header_json['assay'].split(',')
-    logging.debug('Compound header: {}; Assay header: {}'.format(
+    logging.debug("Compound header: {}; Assay header: {}".format(
         ' '.join(header_compound), ' '.join(header_assay)))
+
+    logging.info("Reading headers successfully!")
     return (header_compound, header_assay)
 
 
@@ -112,7 +118,7 @@ def update(id_, values):
         (str): The response from the server.
 
     """
-    logging.info('Requesting to update data...')
+    logging.info("Requesting to update data...")
 
     data = {}
 
@@ -120,8 +126,8 @@ def update(id_, values):
     params = split_values(values)
     type_key, type_value = params[0].split(':')
     if type_key != 'type' or type_value not in ['compound', 'assay']:
-        raise SyntaxError('The first parameter of values must be data type.')
-    logging.debug('Key: ' + type_key + ', Value: ' + type_value)
+        raise SyntaxError("The first parameter of values must be data type.")
+    logging.debug("Key: " + type_key + ", Value: " + type_value)
 
     # Construct database values and retrieve.
     for param in params[1:]:
@@ -131,11 +137,13 @@ def update(id_, values):
         url=ConfigNetwork.get_address() + '/' + type_value + '/' + id_,
         json=data)
     if res.status_code == 200:
-        logging.debug('Status: 200, ' + res.text)
+        logging.debug("Status: 200, " + res.text)
         return res.text
     else:
-        logging.error('Status: ' + str(res.status_code) + ', ' + res.text)
-        raise RuntimeError('Data updating has failed.')
+        logging.error("Status: " + str(res.status_code) + ", " + res.text)
+        raise RuntimeError("Data updating has failed.")
+
+    logging.info("Updated successfully!")
 
 
 def delete(id_, values):
@@ -163,3 +171,5 @@ def delete(id_, values):
     else:
         logging.error('Status: ' + str(res.status_code) + ', ' + res.text)
         raise RuntimeError('Data deleting has failed.')
+
+    logging.info("Deleted successfully!")

@@ -89,29 +89,37 @@ def main():
             outfile_name = 'template.csv'
         else:
             outfile_name = args.outfile.name
+
         logging.info(
-            'Generating data template file {}'.format(outfile_name))
+            "Generating data template file {} ...".format(outfile_name))
+
         hc, ha = crud.read_headers()
         with open(outfile_name, 'w') as f:
             csv.writer(f).writerow(hc + ha)
+
+        logging.info("Generated successfully!")
+
     elif args.req_type == 'create':
         if not args.infile:
-            raise SyntaxError('--infile is required for creating data.')
+            raise SyntaxError("--infile is required for creating data.")
         hc, ha = crud.read_headers()
         crud.create(args.infile, hc, ha)
+
     elif args.req_type == 'read':
         if not args.values:
-            raise SyntaxError('--values is required for reading data.')
+            raise SyntaxError("--values is required for reading data.")
         crud.read(args.values[0])
+
     elif args.req_type == 'update':
         if not args.id:
-            raise SyntaxError('--id is required for updating data.')
+            raise SyntaxError("--id is required for updating data.")
         if not args.values:
-            raise SyntaxError('--values is required for updating data.')
+            raise SyntaxError("--values is required for updating data.")
         crud.update(args.id, args.values[0])
+
     elif args.req_type == 'delete':
         if not args.id:
-            raise SyntaxError('--id is required for deleting data.')
+            raise SyntaxError("--id is required for deleting data.")
         if not args.values:
-            raise SyntaxError('--values is required for deleting data.')
+            raise SyntaxError("--values is required for deleting data.")
         crud.delete(args.id, args.values[0])
