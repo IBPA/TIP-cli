@@ -43,8 +43,12 @@ def parse_args(args):
         type=argparse.FileType('w'),
         help="The path to your output file.")
     parser.add_argument(
+        '--table', '-T',
+        choices=['assay', 'compound'],
+        help="Select a type of tables.")
+    parser.add_argument(
         '--id', '-i',
-        nargs='?',
+        nargs=1,
         help="The ID of data associated with your request.")
     parser.add_argument(
         '--values', '-V',
@@ -62,7 +66,7 @@ def parse_args(args):
     parser.add_argument(
         '--log-level', '-L',
         choices=[10, 20, 30, 40, 50],
-        default=20,
+        default=10,
         type=int,
         help=textwrap.dedent("""\
         The specified log level:
@@ -106,20 +110,24 @@ def main():
         crud.create(args.infile, hc, ha)
 
     elif args.req_type == 'read':
+        if not args.table:
+            raise SyntaxError("--table is required for reading data.")
         if not args.values:
             raise SyntaxError("--values is required for reading data.")
-        crud.read(args.values[0])
+        crud.read(args.table, args.values[0])
 
     elif args.req_type == 'update':
+        if not args.table:
+            raise SyntaxError("--table is required for updating data.")
         if not args.id:
             raise SyntaxError("--id is required for updating data.")
         if not args.values:
             raise SyntaxError("--values is required for updating data.")
-        crud.update(args.id, args.values[0])
+        crud.update(args.table, args.id[0], args.values[0])
 
     elif args.req_type == 'delete':
+        if not args.table:
+            raise SyntaxError("--table is required for deleting data.")
         if not args.id:
             raise SyntaxError("--id is required for deleting data.")
-        if not args.values:
-            raise SyntaxError("--values is required for deleting data.")
-        crud.delete(args.id, args.values[0])
+        crud.delete(args.table, args.id[0])
