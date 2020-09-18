@@ -94,8 +94,6 @@ def read_headers():
         header_compound, header_assay (tuple): Two lists of headers.
 
     """
-    logging.info("Requesting to read headers...")
-
     res = requests.get(url=ConfigNetwork.get_address() + "/database/header")
     header_json = json.loads(res.text)
     header_compound = header_json['compound'].split(',')
@@ -103,7 +101,6 @@ def read_headers():
     logging.debug("Compound header: {}; Assay header: {}".format(
         ' '.join(header_compound), ' '.join(header_assay)))
 
-    logging.info("Reading headers successfully!")
     return (header_compound, header_assay)
 
 
