@@ -33,6 +33,7 @@ def create(fobj, header_compound, header_assay):
 
     """
     logging.info('Requesting to create data...')
+
     data_json = convert_csv_to_json(fobj, header_compound, header_assay)
     res = requests.post(url=ConfigNetwork.get_address() + '/compound',
                         json=data_json)
@@ -90,6 +91,7 @@ def read_headers():
 
     """
     logging.info('Requesting to get headers...')
+
     res = requests.get(url=ConfigNetwork.get_address() + '/database/header')
     header_json = json.loads(res.text)
     header_compound = header_json['compound'].split(',')

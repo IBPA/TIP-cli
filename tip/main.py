@@ -36,7 +36,7 @@ def parse_args(args):
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         'req_type',
-        choices=['gen-tmp', 'create', 'read', 'update', 'delete'],
+        choices=['gen-template', 'create', 'read', 'update', 'delete'],
         help="Select a type of your request.")
     parser.add_argument(
         '--infile', '-I',
@@ -53,7 +53,7 @@ def parse_args(args):
         nargs='?',
         help="The TIP ID (TID) associated with your request.")
     parser.add_argument(
-        '--values', '-Q',
+        '--values', '-V',
         nargs='*',
         help=textwrap.dedent("""\
         The values of fields of data associated with your request:
@@ -90,7 +90,7 @@ def main():
         level=args.log_level,
         format='%(asctime)s %(levelname)s %(filename)s: %(message)s')
 
-    if args.req_type == 'gen-tmp':
+    if args.req_type == 'gen-template':
         if not args.outfile:
             outfile_name = 'template.csv'
         else:
