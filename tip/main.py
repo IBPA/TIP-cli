@@ -45,7 +45,7 @@ def parse_args(args):
     parser.add_argument(
         '--id', '-i',
         nargs='?',
-        help="The TIP ID (TID) associated with your request.")
+        help="The ID of data associated with your request.")
     parser.add_argument(
         '--values', '-V',
         nargs='*',
