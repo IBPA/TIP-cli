@@ -101,11 +101,11 @@ def read_headers():
     return (header_compound, header_assay)
 
 
-def update(tid, values):
+def update(id_, values):
     """Send requests for updating existing documents on the database.
 
     Args:
-        tid (str): The TIP Id of updating data.
+        id_ (str): The TIP Id of updating data.
         values (str): A string to indicate fields and values for updating.
 
     Returns:
@@ -128,7 +128,7 @@ def update(tid, values):
         key, value = param.split(':')
         data[key] = value
     res = requests.put(
-        url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid,
+        url=ConfigNetwork.get_address() + '/' + type_value + '/' + id_,
         json=data)
     if res.status_code == 200:
         logging.debug('Status: 200, ' + res.text)
@@ -138,12 +138,12 @@ def update(tid, values):
         raise RuntimeError('Data updating has failed.')
 
 
-def delete(tid, values):
+def delete(id_, values):
     """Send requests for deleting and returning existing documents on the
     database.
 
     Args:
-        tid (str): The TIP Id of deleting data.
+        id_ (str): The TIP Id of deleting data.
         values (str): A string to indicate fields and values for updating.
 
     Returns:
@@ -156,7 +156,7 @@ def delete(tid, values):
     params = split_values(values)
     type_value = params[0].split(':')[1]
     res = requests.delete(
-        url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid)
+        url=ConfigNetwork.get_address() + '/' + type_value + '/' + id_)
     if res.status_code == 200:
         logging.debug('Status: 200, ' + res.text)
         return res.text

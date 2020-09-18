@@ -6,12 +6,6 @@ This file contains the driver for the command-line interface (CLI).
 Author:
     Fangzhou Li: https://github.com/fangzhouli
 
-TODO:
-    - Example
-    - Read
-    - help
-    - comments
-
 """
 
 import csv
@@ -49,7 +43,7 @@ def parse_args(args):
         type=argparse.FileType('w'),
         help="The path to your output file.")
     parser.add_argument(
-        '--tid', '-T',
+        '--id', '-i',
         nargs='?',
         help="The TIP ID (TID) associated with your request.")
     parser.add_argument(
@@ -110,14 +104,14 @@ def main():
             raise SyntaxError('--values is required for reading data.')
         crud.read(args.values[0])
     elif args.req_type == 'update':
-        if not args.tid:
-            raise SyntaxError('--tid is required for updating data.')
+        if not args.id:
+            raise SyntaxError('--id is required for updating data.')
         if not args.values:
             raise SyntaxError('--values is required for updating data.')
-        crud.update(args.tid, args.values[0])
+        crud.update(args.id, args.values[0])
     elif args.req_type == 'delete':
-        if not args.tid:
-            raise SyntaxError('--tid is required for deleting data.')
+        if not args.id:
+            raise SyntaxError('--id is required for deleting data.')
         if not args.values:
             raise SyntaxError('--values is required for deleting data.')
-        crud.delete(args.tid, args.values[0])
+        crud.delete(args.id, args.values[0])
