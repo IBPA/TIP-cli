@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""tip/db/crud.py description
+"""
 
 This module defines functions for sending RESTful requests to the TIP server.
 
@@ -15,11 +15,10 @@ TODO:
 
 """
 
-import json
 import logging
 import requests
+from tip.utils import convert_csv_to_json, convert_json_to_csv, split_values
 from tip.config import ConfigNetwork
-from tip.utils import convert_csv_to_json, split_values
 
 
 def create(fobj, header_compound, header_assay):
@@ -27,7 +26,8 @@ def create(fobj, header_compound, header_assay):
 
     Args:
         fobj (str or file object): The CSV file containing data.
-
+        header_compound (list of str): The header of compound template.
+        header_assay (list of str) : The header of assay template.
     Returns:
         (str): The response from the server.
 
@@ -47,12 +47,15 @@ def create(fobj, header_compound, header_assay):
     logging.info("Created successfully!")
 
 
-def read(table, values):
+def read(fobj, table, values, header_compound, header_assay):
     """Send requests for reading existing documents on the database.
 
     Args:
+        fobj (str or file object): The file storing the output.
         table (str): A table the data belongs to.
         values (str): A string to indicate fields and values for updating.
+        header_compound (list of str): The header of compound template.
+        header_assay (list of str) : The header of assay template.
 
     Returns:
         (str): The response from the server.
@@ -77,29 +80,15 @@ def read(table, values):
         url=ConfigNetwork.get_address() + '/' + table + '?' + req_query)
     if res.status_code == 200:
         logging.debug("Status: 200, " + res.text)
+
+        convert_json_to_csv(res.text, header_compound, header_assay)
+
         return res.text
     else:
         logging.error("Status: " + str(res.status_code) + ", " + res.text)
         raise RuntimeError("Data reading has failed.")
 
     logging.info("Read successfully!")
-
-
-def read_headers():
-    """Send requests for getting the up-to-date database headers.
-
-    Returns:
-        header_compound, header_assay (tuple): Two lists of headers.
-
-    """
-    res = requests.get(url=ConfigNetwork.get_address() + "/database/header")
-    header_json = json.loads(res.text)
-    header_compound = header_json['compound'].split(',')
-    header_assay = header_json['assay'].split(',')
-    logging.debug("Compound header: {}; Assay header: {}".format(
-        ' '.join(header_compound), ' '.join(header_assay)))
-
-    return (header_compound, header_assay)
 
 
 def update(table, id_, values):
