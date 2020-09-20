@@ -1,17 +1,17 @@
 import shlex
 
 
-def split_query(query):
-    """Split CLI query.
+def split_values(values):
+    """Split CLI values.
 
     Args:
-        query (str): CLI query.
+        values (str): CLI values.
 
     Returns:
         (list): Splitted parameters.
 
     """
-    splitter = shlex.shlex(query, posix=True)
+    splitter = shlex.shlex(values, posix=True)
     splitter.whitespace = ','
     splitter.whitespace_split = True
     return list(splitter)

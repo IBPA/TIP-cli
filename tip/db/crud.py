@@ -1,17 +1,7 @@
 # -*- coding: utf-8 -*-
-"""tip/db/crud.py description
+"""
 
-This module defines functions for communicating with the TIP server. Some
-database operations require a query argument, and the format of query argument
-is the following:
-- Each parameter is a pair of a field and a value.
-- A field and a value are separated by exactly a colon.
-- The first parameter must be 'type:compound' or 'type:assay', indicating the
-    data type you are updating.
-- Each parameter is separated by exactly a comma.
-- Use quotes for strings containing whitespace(s), (e.g., comments.)
-- Use semicolons for strings containing multiple values, (e.g., pmid.)
-See documentation for examples.
+This module defines functions for sending RESTful requests to the TIP server.
 
 Author:
     Fangzhou Li: https://github.com/fangzhouli
@@ -25,11 +15,10 @@ TODO:
 
 """
 
-import json
 import logging
 import requests
+from tip.utils import convert_csv_to_json, convert_json_to_csv, split_values
 from tip.config import ConfigNetwork
-from tip.utils import convert_csv_to_json, split_query
 
 
 def create(fobj, header_compound, header_assay):
@@ -37,137 +26,130 @@ def create(fobj, header_compound, header_assay):
 
     Args:
         fobj (str or file object): The CSV file containing data.
-
+        header_compound (list of str): The header of compound template.
+        header_assay (list of str) : The header of assay template.
     Returns:
         (str): The response from the server.
 
     """
-    logging.info('Requesting to create data...')
+    logging.info("Requesting to create data...")
+
     data_json = convert_csv_to_json(fobj, header_compound, header_assay)
     res = requests.post(url=ConfigNetwork.get_address() + '/compound',
                         json=data_json)
     if res.status_code == 200:
-        logging.debug('Status: 200, ' + res.text)
+        logging.debug("Status: 200, " + res.text)
         return res.text
     else:
         logging.error(res.text)
-        raise RuntimeError('Data creating has failed.')
+        raise RuntimeError("Data creating has failed.")
+
+    logging.info("Created successfully!")
 
 
-def read(query):
+def read(fobj, table, values):
     """Send requests for reading existing documents on the database.
 
     Args:
-        query (str): A query to indicate fields and values for updating.
+        fobj (str or file object): The file storing the output.
+        table (str): A table the data belongs to.
+        values (str): A string to indicate fields and values for updating.
 
     Returns:
         (str): The response from the server.
 
     """
-    logging.info('Requesting to read data...')
+    logging.info("Requesting to read data...")
+    logging.debug("Table: " + table + ', values: ' + values)
 
-    # Parse cli query
-    params = split_query(query)
-    type_key, type_value = params[0].split(':')
-    if type_key != 'type' or type_value not in ['compound', 'assay']:
-        raise SyntaxError('The first parameter of query must be data type.')
-    logging.debug('Key: ' + type_key + ', Value: ' + type_value)
+    # Parse cli values
+    params = split_values(values)
 
-    # Construct database query.
+    # Construct database values.
     req_query_list = []
-    for param in params[1:]:
+    for param in params:
         key, value = param.split(':')
         req_query_list.append(key + '=' + value)
     req_query = '&'.join(req_query_list)
-    logging.debug('Requested query: ' + req_query)
+    logging.debug("Requested values: " + req_query)
 
     # Retrieve the response.
     res = requests.get(
-        url=ConfigNetwork.get_address() + '/' + type_value + '?' + req_query)
+        url=ConfigNetwork.get_address() + '/' + table + '?' + req_query)
     if res.status_code == 200:
-        logging.debug('Status: 200, ' + res.text)
+        logging.debug("Status: 200, " + res.text)
+
+        with open(fobj, 'w') as f:
+            f.write(res.text)
         return res.text
     else:
-        logging.error('Status: ' + str(res.status_code) + ', ' + res.text)
-        raise RuntimeError('Data reading has failed.')
+        logging.error("Status: " + str(res.status_code) + ", " + res.text)
+
+        raise RuntimeError("Data reading has failed.")
+
+    logging.info("Read successfully!")
 
 
-def read_headers():
-    """Send requests for getting the up-to-date database headers.
-
-    Returns:
-        header_compound, header_assay (tuple): Two lists of headers.
-
-    """
-    logging.info('Requesting to get headers...')
-    res = requests.get(url=ConfigNetwork.get_address() + '/database/header')
-    header_json = json.loads(res.text)
-    header_compound = header_json['compound'].split(',')
-    header_assay = header_json['assay'].split(',')
-    logging.debug('Compound header: {}; Assay header: {}'.format(
-        ' '.join(header_compound), ' '.join(header_assay)))
-    return (header_compound, header_assay)
-
-
-def update(tid, query):
+def update(table, id_, values):
     """Send requests for updating existing documents on the database.
 
     Args:
-        tid (str): The TIP Id of updating data.
-        query (str): A query to indicate fields and values for updating.
+        table (str): A table the data belongs to.
+        id_ (str): The TIP Id of updating data.
+        values (str): A string to indicate fields and values for updating.
 
     Returns:
         (str): The response from the server.
 
     """
-    logging.info('Requesting to update data...')
+    logging.info("Requesting to update data...")
+    logging.debug("Table: " + table + ', values: ' + values)
 
     data = {}
 
-    # Parse cli query.
-    params = split_query(query)
-    type_key, type_value = params[0].split(':')
-    if type_key != 'type' or type_value not in ['compound', 'assay']:
-        raise SyntaxError('The first parameter of query must be data type.')
-    logging.debug('Key: ' + type_key + ', Value: ' + type_value)
+    # Parse cli values.
+    params = split_values(values)
 
-    # Construct database query and retrieve.
-    for param in params[1:]:
+    # Construct database values and retrieve.
+    for param in params:
         key, value = param.split(':')
         data[key] = value
     res = requests.put(
-        url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid,
+        url=ConfigNetwork.get_address() + '/' + table + '/' + id_,
         json=data)
     if res.status_code == 200:
-        logging.debug('Status: 200, ' + res.text)
+        logging.debug("Status: 200, " + res.text)
         return res.text
     else:
-        logging.error('Status: ' + str(res.status_code) + ', ' + res.text)
-        raise RuntimeError('Data updating has failed.')
+        logging.error("Status: " + str(res.status_code) + ", " + res.text)
+        raise RuntimeError("Data updating has failed.")
+
+    logging.info("Updated successfully!")
 
 
-def delete(tid, query):
+def delete(table, id_):
     """Send requests for deleting and returning existing documents on the
     database.
 
     Args:
-        tid (str): The TIP Id of deleting data.
-        query (str): A query to indicate fields and values for updating.
+        table (str): A table the data belongs to.
+        id_ (str): The TIP Id of deleting data.
 
     Returns:
         (str): The response from the server.
 
     """
     logging.info('Requesting to delete data...')
+    logging.debug("Table: " + table)
 
-    # Parse cli query and request.
-    params = split_query(query)
-    type_value = params[0].split(':')[1]
+    # Parse cli values and request.
     res = requests.delete(
-        url=ConfigNetwork.get_address() + '/' + type_value + '/' + tid)
+        url=ConfigNetwork.get_address() + '/' + table + '/' + id_)
     if res.status_code == 200:
         logging.debug('Status: 200, ' + res.text)
         return res.text
     else:
         logging.error('Status: ' + str(res.status_code) + ', ' + res.text)
         raise RuntimeError('Data deleting has failed.')
+
+    logging.info("Deleted successfully!")

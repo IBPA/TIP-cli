@@ -29,10 +29,10 @@ def _convert_compound_df_to_json(df_compound, header_compound, header_assay):
     compound_dict = df_compound.iloc[0][header_compound].dropna().to_dict()
 
     assays = []
-    # TODO
     df_compound[header_assay].rename(columns={'comment2': 'comment'}).apply(
         lambda se: assays.append(se.dropna().to_dict()), axis=1)
     compound_dict['assays'] = assays
+
     return compound_dict
 
 
@@ -47,6 +47,7 @@ def convert_csv_to_json(fobj, header_compound, header_assay):
 
     """
     logging.info('Converting uploaded CSV file into JSON data format...')
+
     # Split the dataframe by each compound.
     df = pd.read_csv(fobj, dtype=str)
     idx_split = df[~df[header_compound].isnull().all(axis=1)
@@ -60,4 +61,5 @@ def convert_csv_to_json(fobj, header_compound, header_assay):
     data_converted = dict(
         count=len(compounds),
         compounds=compounds)
+
     return data_converted
