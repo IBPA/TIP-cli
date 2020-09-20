@@ -47,15 +47,13 @@ def create(fobj, header_compound, header_assay):
     logging.info("Created successfully!")
 
 
-def read(fobj, table, values, header_compound, header_assay):
+def read(fobj, table, values):
     """Send requests for reading existing documents on the database.
 
     Args:
         fobj (str or file object): The file storing the output.
         table (str): A table the data belongs to.
         values (str): A string to indicate fields and values for updating.
-        header_compound (list of str): The header of compound template.
-        header_assay (list of str) : The header of assay template.
 
     Returns:
         (str): The response from the server.
@@ -81,11 +79,12 @@ def read(fobj, table, values, header_compound, header_assay):
     if res.status_code == 200:
         logging.debug("Status: 200, " + res.text)
 
-        convert_json_to_csv(res.text, header_compound, header_assay)
-
+        with open(fobj, 'w') as f:
+            f.write(res.text)
         return res.text
     else:
         logging.error("Status: " + str(res.status_code) + ", " + res.text)
+
         raise RuntimeError("Data reading has failed.")
 
     logging.info("Read successfully!")

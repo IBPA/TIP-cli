@@ -130,7 +130,7 @@ def main():
 
     elif args.req_type == 'read':
         if not args.outfile:
-            outfile_name = 'output.csv'
+            outfile_name = 'output.txt'
         else:
             outfile_name = args.outfile.name
 
@@ -141,8 +141,7 @@ def main():
             raise SyntaxError("--table is required for reading data.")
         if not args.values:
             raise SyntaxError("--values is required for reading data.")
-        crud.read(outfile_name, args.table, args.values[0],
-                  header_compound, header_assay)
+        crud.read(outfile_name, args.table, args.values[0])
 
     elif args.req_type == 'update':
         if not args.table:
