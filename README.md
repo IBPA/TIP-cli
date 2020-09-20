@@ -50,3 +50,5 @@ This work has been supported by UCD Superfund Research Center funded by NIH/NIEH
 
 1. docstring for __init__
 2. Server should return all assays if users read a compound.
+3. Read, write data to a file, change json to CSV format as the template.
+4. Follow REST guideline.
