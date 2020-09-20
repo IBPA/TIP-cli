@@ -4,11 +4,6 @@ TIP (Toxicological Integrated Platform) provides a digital resource that
 - stores and integrates data from the labs that are part of the SRP center in UCD,
 - enables access to data for both internal and external partners through an application programming interface (API).
 
-## 0. TODO
-
-1. Encryption / HTTPS Phase 2
-2. Handler - Logging rules
-
 ## Directories
 
 * <code>[tip](./tip)</code>: The source code.
@@ -50,3 +45,8 @@ This project is licensed under the GNU GPLv3 License. Please see the <code>[LICE
 ## Acknowledgments
 
 This work has been supported by UCD Superfund Research Center funded by NIH/NIEHS.
+
+## Todo
+
+1. docstring for __init__
+2. Server should return all assays if users read a compound.
