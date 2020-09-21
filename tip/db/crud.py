@@ -17,7 +17,7 @@ TODO:
 
 import logging
 import requests
-from tip.utils import convert_csv_to_json, convert_json_to_csv, split_values
+from tip.utils import convert_csv_to_json, split_values
 from tip.config import ConfigNetwork
 
 

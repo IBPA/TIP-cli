@@ -62,4 +62,6 @@ def convert_csv_to_json(fobj, header_compound, header_assay):
         count=len(compounds),
         compounds=compounds)
 
+    logging.debug('Converted data: %s', data_converted)
+
     return data_converted
