@@ -46,12 +46,12 @@ def parse_args(args):
         choices=['gen-template', 'create', 'read', 'update', 'delete'],
         help="Select a type of your request.")
     parser.add_argument(
-        '--infile', '-I',
+        '--input', '-I',
         nargs='?',
         type=argparse.FileType('r'),
         help="The path to your input file.")
     parser.add_argument(
-        '--outfile', '-O',
+        '--output', '-O',
         nargs='?',
         type=argparse.FileType('w'),
         help="The path to your output file.")
@@ -110,38 +110,38 @@ def main():
         header_compound = pickle.load(f)
 
     if args.req_type == 'gen-template':
-        if not args.outfile:
-            outfile_name = 'template.csv'
+        if not args.output:
+            output_file = 'template.csv'
         else:
-            outfile_name = args.outfile.name
+            output_file = args.output.name
 
         logging.info(
-            "Generating data template file {} ...".format(outfile_name))
+            "Generating data template file {} ...".format(output_file))
 
-        with open(outfile_name, 'w') as f:
+        with open(output_file, 'w') as f:
             csv.writer(f).writerow(header_compound + header_assay)
 
         logging.info("Generated successfully!")
 
     elif args.req_type == 'create':
-        if not args.infile:
-            raise SyntaxError("--infile is required for creating data.")
-        crud.create(args.infile, header_compound, header_assay)
+        if not args.input:
+            raise SyntaxError("--input is required for creating data.")
+        crud.create(args.input, header_compound, header_assay)
 
     elif args.req_type == 'read':
-        if not args.outfile:
-            outfile_name = 'output.txt'
+        if not args.output:
+            output_file = 'output.txt'
         else:
-            outfile_name = args.outfile.name
+            output_file = args.output.name
 
         logging.info(
-            "Writing read data to {} ...".format(outfile_name))
+            "Writing read data to {} ...".format(output_file))
 
         if not args.table:
             raise SyntaxError("--table is required for reading data.")
         if not args.values:
             raise SyntaxError("--values is required for reading data.")
-        crud.read(outfile_name, args.table, args.values[0])
+        crud.read(output_file, args.table, args.values[0])
 
     elif args.req_type == 'update':
         if not args.table:
